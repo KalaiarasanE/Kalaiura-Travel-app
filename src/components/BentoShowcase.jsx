@@ -197,7 +197,7 @@ export function BentoShowcase() {
                 marginBottom: 'var(--space-sm)'
               }}
             >
-              AERORA Guide
+              KALAIURA Guide
             </h3>
 
             <p

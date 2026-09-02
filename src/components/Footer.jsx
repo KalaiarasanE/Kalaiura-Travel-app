@@ -43,7 +43,7 @@ export function Footer() {
                   marginBottom: 'var(--space-sm)'
                 }}
               >
-                AERORA
+                KALAIURA
               </span>
 
               <blockquote
@@ -169,7 +169,7 @@ export function Footer() {
             }}
           >
             <div>
-              © {new Date().getFullYear()} AERORA. Designed with architectural restraint and editorial rigor.
+              © {new Date().getFullYear()} KALAIURA. Designed with architectural restraint and editorial rigor.
             </div>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-md)' }}>

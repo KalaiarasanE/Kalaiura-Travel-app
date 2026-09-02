@@ -71,7 +71,7 @@ export function Navbar() {
               background: 'transparent',
               padding: 0
             }}
-            aria-label="AERORA Home"
+            aria-label="KALAIURA Home"
           >
             <span
               style={{
@@ -83,7 +83,7 @@ export function Navbar() {
                 lineHeight: 1
               }}
             >
-              AERORA
+              KALAIURA
             </span>
             <span
               style={{
@@ -312,7 +312,7 @@ export function Navbar() {
                   lineHeight: 1
                 }}
               >
-                AERORA
+                KALAIURA
               </span>
               <span
                 style={{

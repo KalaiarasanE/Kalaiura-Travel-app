@@ -39,7 +39,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
     {
       id: 'init-1',
       sender: 'ai',
-      text: `Greetings. I am AERORA Guide, your cultural intelligence curator for ${selectedDestination.name}, ${selectedDestination.country}. Ask me about sacred architectural timings, off-map dining sanctuaries, or optimal seasonal windows. What would you like to uncover?`,
+      text: `Greetings. I am KALAIURA Guide, your cultural intelligence curator for ${selectedDestination.name}, ${selectedDestination.country}. Ask me about sacred architectural timings, off-map dining sanctuaries, or optimal seasonal windows. What would you like to uncover?`,
       timestamp: 'Just now'
     }
   ]);
@@ -170,7 +170,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
                 color: 'var(--text-primary)'
               }}
             >
-              AERORA Guide
+              KALAIURA Guide
             </h3>
           </div>
           <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
@@ -288,7 +288,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
                 color: 'var(--gold)'
               }}
             >
-              AE
+              KU
             </div>
             <div className="typing-indicator">
               <span className="typing-dot" />
@@ -382,7 +382,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           value={inputQuery}
           onChange={(e) => setInputQuery(e.target.value)}
           placeholder={`Inquire about ${selectedDestination.name}...`}
-          aria-label={`Ask AERORA Guide about ${selectedDestination.name}`}
+          aria-label={`Ask KALAIURA Guide about ${selectedDestination.name}`}
           disabled={isLoading}
           style={{ flex: 1, padding: '0.75rem 1.15rem' }}
         />

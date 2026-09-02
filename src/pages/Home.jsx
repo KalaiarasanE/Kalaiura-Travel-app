@@ -57,7 +57,7 @@ export function Home() {
       <section className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
         <div className="section-header centered">
           <span className="eyebrow">Intelligent Consultation</span>
-          <h2 className="section-title">AERORA Guide</h2>
+          <h2 className="section-title">KALAIURA Guide</h2>
           <p className="section-subtitle">
             Engage with our cultural concierge. Inquire about seasonal light, local etiquette, or tailored pacing before setting out.
           </p>

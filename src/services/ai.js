@@ -77,7 +77,7 @@ export async function askAIGuide(prompt, destinationId = 'kyoto') {
 
   if (apiKey) {
     try {
-      const systemContext = `You are AERORA Guide, an elite editorial travel concierge and cultural curator.
+      const systemContext = `You are KALAIURA Guide, an elite editorial travel concierge and cultural curator.
 Destination: ${destination.name}, ${destination.country}
 Climate: ${destination.climate}
 Atmosphere: Editorial, sophisticated, evocative, sensory, and concise. Avoid generic tourist clichés. Speak with the authority and poetic elegance of a luxury travel magazine editor. Limit responses to 2-3 evocative paragraphs with actionable insight.`;

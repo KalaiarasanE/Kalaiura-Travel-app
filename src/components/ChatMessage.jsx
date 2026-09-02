@@ -47,7 +47,7 @@ export function ChatMessage({ message }) {
             boxShadow: !isUser ? '0 0 10px rgba(224, 162, 77, 0.15)' : 'none'
           }}
         >
-          {isUser ? 'YOU' : 'AE'}
+          {isUser ? 'YOU' : 'KU'}
         </div>
 
         {/* Message Bubble */}

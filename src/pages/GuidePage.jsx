@@ -15,7 +15,7 @@ export function GuidePage() {
       <div className="container" style={{ maxWidth: '860px' }}>
         <div className="section-header centered">
           <span className="eyebrow">Conversational Intelligence</span>
-          <h1 className="section-title">AERORA Guide</h1>
+          <h1 className="section-title">KALAIURA Guide</h1>
           <p className="section-subtitle">
             Ask the place anything. Receive bespoke advice on cultural etiquette, photography windows, crowds avoidance, and unhurried pacing.
           </p>

@@ -32,7 +32,7 @@ export function Hero({ onExploreClick }) {
   return (
     <section
       className="hero-section"
-      aria-label="Welcome to AERORA"
+      aria-label="Welcome to KALAIURA"
       style={{
         position: 'relative',
         minHeight: '100vh',
