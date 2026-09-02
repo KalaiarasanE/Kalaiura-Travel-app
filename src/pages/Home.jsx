@@ -3,7 +3,7 @@
    The flagship editorial showcase: Hero, Discovery, Route Map & Curated Places
    ============================================================================== */
 
-import React, { useRef } from 'react';
+import React from 'react';
 import { Hero } from '../components/Hero';
 import { DestinationExplorer } from '../components/DestinationExplorer';
 import { JourneyMap } from '../components/JourneyMap';
@@ -12,8 +12,6 @@ import { AIGuide } from '../components/AIGuide';
 import { PLACES } from '../data/places';
 
 export function Home() {
-  const explorerRef = useRef(null);
-
   const scrollToExplorer = () => {
     const explorerEl = document.getElementById('destinations-explorer');
     if (explorerEl) {

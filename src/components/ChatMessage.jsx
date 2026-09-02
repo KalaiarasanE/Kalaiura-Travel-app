@@ -4,7 +4,6 @@
    ============================================================================== */
 
 import React from 'react';
-import { Icon } from './Icons';
 
 export function ChatMessage({ message }) {
   const isUser = message.sender === 'user';

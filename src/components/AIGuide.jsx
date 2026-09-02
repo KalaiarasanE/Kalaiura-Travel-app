@@ -17,6 +17,12 @@ const SUGGESTED_QUESTIONS = [
   'Plan a 5-day trip for me.'
 ];
 
+let globalMsgCounter = 0;
+function nextMsgId(prefix = 'msg') {
+  globalMsgCounter += 1;
+  return `${prefix}-${globalMsgCounter}`;
+}
+
 export function AIGuide({ initialDestinationId = 'kyoto' }) {
   const [selectedDestId, setSelectedDestId] = useState(initialDestinationId);
   const [inputQuery, setInputQuery] = useState('');
@@ -45,13 +51,15 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
   const handleDestinationChange = (newDestId) => {
     setSelectedDestId(newDestId);
     const newDest = DESTINATIONS.find((d) => d.id === newDestId) || DESTINATIONS[0];
+    const newId = nextMsgId('dest');
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setMessages((prev) => [
       ...prev,
       {
-        id: Date.now().toString(),
+        id: newId,
         sender: 'ai',
         text: `Now attuned to ${newDest.name}, ${newDest.country} (${newDest.climate} climate). How may I illuminate your expedition here?`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: timeStr
       }
     ]);
   };
@@ -60,11 +68,14 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
     const textToSend = queryText || inputQuery;
     if (!textToSend.trim() || isLoading) return;
 
+    const userMsgId = nextMsgId('user');
+    const userTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     const userMessage = {
-      id: Date.now().toString(),
+      id: userMsgId,
       sender: 'user',
       text: textToSend,
-      timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+      timestamp: userTime
     };
 
     setMessages((prev) => [...prev, userMessage]);
@@ -74,20 +85,26 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
 
     try {
       const aiReply = await askAIGuide(textToSend, selectedDestId);
+      const aiMsgId = nextMsgId('ai');
+      const aiTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
       const aiMessage = {
-        id: (Date.now() + 1).toString(),
+        id: aiMsgId,
         sender: 'ai',
         text: aiReply,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: aiTime
       };
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
+      console.warn('AERORA Guide error:', err);
       setErrorMessage('Your guide is temporarily offline. Calibrating connection.');
+      const fallbackId = nextMsgId('err');
+      const fallbackTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const fallbackMsg = {
-        id: (Date.now() + 1).toString(),
+        id: fallbackId,
         sender: 'ai',
         text: `Your guide is temporarily offline. While our neural connection recalibrates, consider visiting ${selectedDestination.name}’s iconic quarters early in the morning for serene contemplation.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: fallbackTime
       };
       setMessages((prev) => [...prev, fallbackMsg]);
     } finally {
@@ -96,16 +113,20 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
   };
 
   const clearConversation = () => {
+    const clearId = nextMsgId('clear');
+    const clearTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
     setMessages([
       {
-        id: Date.now().toString(),
+        id: clearId,
         sender: 'ai',
         text: `Conversation cleared. Ready for your inquiries regarding ${selectedDestination.name}.`,
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+        timestamp: clearTime
       }
     ]);
     setErrorMessage(null);
   };
+
+
 
   return (
     <div

@@ -25,11 +25,6 @@ export function Navbar() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsMobileMenuOpen(false);
-  }, [location.pathname]);
-
   const navLinks = [
     { label: 'Discover', path: '/' },
     { label: 'Destinations', path: '/destinations' },

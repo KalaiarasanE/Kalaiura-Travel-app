@@ -58,6 +58,7 @@ export function LocationProvider({ children }) {
           setWeather(telemetry);
         }
       } catch (err) {
+        console.warn('AERORA Location Context:', err);
         if (isMounted) {
           setWeatherError('Weather is taking a moment to catch up.');
         }

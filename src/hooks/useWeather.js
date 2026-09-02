@@ -19,6 +19,7 @@ export function useWeather(lat, lon, locationName = 'Destination') {
       const data = await fetchWeatherTelemetry(lat, lon, locationName);
       setWeather(data);
     } catch (err) {
+      console.warn('AERORA Weather Hook Notice:', err);
       setError('Weather telemetry unavailable');
     } finally {
       setLoading(false);
@@ -26,8 +27,26 @@ export function useWeather(lat, lon, locationName = 'Destination') {
   }, [lat, lon, locationName]);
 
   useEffect(() => {
-    fetchTelemetry();
-  }, [fetchTelemetry]);
+    let active = true;
+    if (lat != null && lon != null) {
+      fetchWeatherTelemetry(lat, lon, locationName)
+        .then((data) => {
+          if (active) setWeather(data);
+        })
+        .catch((err) => {
+          if (active) {
+            console.warn('Telemetry loading error:', err);
+            setError('Weather telemetry unavailable');
+          }
+        })
+        .finally(() => {
+          if (active) setLoading(false);
+        });
+    }
+    return () => {
+      active = false;
+    };
+  }, [lat, lon, locationName]);
 
   return { weather, loading, error, refresh: fetchTelemetry };
 }
