@@ -1,6 +1,6 @@
 /* ==============================================================================
-   AERORA — DESTINATION EXPLORER
-   Asymmetric editorial grid, multi-parameter filtering, and refined search
+   AERORA — DESTINATION CONTENT EXPLORER
+   Styled with exact motionsites-ai capsule filter bar & prompt-card grid
    ============================================================================== */
 
 import React, { useState, useMemo } from 'react';
@@ -20,26 +20,16 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
   // Filter computation
   const filteredDestinations = useMemo(() => {
     return DESTINATIONS.filter((item) => {
-      // Search text filter
       const matchesSearch =
         !searchQuery ||
         item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.country.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.shortDescription.toLowerCase().includes(searchQuery.toLowerCase());
 
-      // Region
       const matchesRegion = selectedRegion === 'All' || item.region === selectedRegion;
-
-      // Climate
       const matchesClimate = selectedClimate === 'All' || item.climate === selectedClimate;
-
-      // Style
       const matchesStyle = selectedStyle === 'All' || item.travelStyles.includes(selectedStyle);
-
-      // Budget
       const matchesBudget = selectedBudget === 'All' || item.budget === selectedBudget;
-
-      // Season
       const matchesSeason = selectedSeason === 'All' || item.bestSeason === selectedSeason;
 
       return matchesSearch && matchesRegion && matchesClimate && matchesStyle && matchesBudget && matchesSeason;
@@ -67,35 +57,26 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
     <section id={id} className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
       {/* Section Header */}
       <div className="section-header centered">
-        <span className="eyebrow">Editorial Catalogue</span>
-        <h2 className="section-title">Unique Destination Discovery</h2>
+        <span className="eyebrow">Editorial Directory</span>
+        <h2 className="section-title">Curated Sanctuaries</h2>
         <p className="section-subtitle">
           Depart from ordinary tourist itineraries. Explore sanctuary landscapes, architectural pinnacles, and cultural tapestries curated for the discerning traveler.
         </p>
       </div>
 
-      {/* Search & Filter Controls */}
-      <div
-        style={{
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
-          borderRadius: 'var(--radius-sm)',
-          padding: 'var(--space-lg)',
-          marginBottom: 'var(--space-2xl)',
-          boxShadow: 'var(--shadow-subtle)'
-        }}
-      >
-        {/* Search Input */}
-        <div style={{ position: 'relative', marginBottom: 'var(--space-md)' }}>
+      {/* Motionsites Capsule Navigation & Filter Bar */}
+      <div style={{ marginBottom: 'var(--space-2xl)' }}>
+        {/* Top Search Bar */}
+        <div style={{ position: 'relative', marginBottom: 'var(--space-lg)', maxWidth: '640px', margin: '0 auto var(--space-lg)' }}>
           <Icon
             name="search"
-            size={18}
+            size={16}
             style={{
               position: 'absolute',
               left: '1.25rem',
               top: '50%',
               transform: 'translateY(-50%)',
-              color: 'var(--color-accent)',
+              color: 'var(--gold)',
               pointerEvents: 'none'
             }}
           />
@@ -104,13 +85,15 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
             className="input-field"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Where do you want to disappear to? (e.g. Kyoto, Iceland, Temple, Alpine...)"
+            placeholder="Search sanctuary, country, or architectural style..."
             aria-label="Search destinations"
             style={{
+              borderRadius: '9999px',
               paddingLeft: '3.25rem',
               paddingRight: searchQuery ? '3rem' : '1.25rem',
-              fontSize: '1.05rem',
-              backgroundColor: 'rgba(9, 10, 14, 0.65)'
+              fontSize: '0.92rem',
+              backgroundColor: 'rgba(17, 19, 24, 0.95)',
+              border: '1px solid var(--border)'
             }}
           />
           {searchQuery && (
@@ -124,263 +107,203 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
                 right: '0.85rem',
                 top: '50%',
                 transform: 'translateY(-50%)',
-                width: '28px',
-                height: '28px'
+                width: '26px',
+                height: '26px'
               }}
             >
-              <Icon name="close" size={14} />
+              <Icon name="close" size={13} />
             </button>
           )}
         </div>
 
-        {/* Region Fast Filter Bar (Horizontally scrollable on mobile) */}
-        <div style={{ marginBottom: 'var(--space-md)' }}>
+        {/* Motionsites Horizontal Capsule Pill Strip + Dropdown Buttons */}
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: 'var(--space-sm)'
+          }}
+        >
           <div
             style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              marginBottom: 'var(--space-xs)'
+              width: '100%',
+              flexWrap: 'wrap',
+              gap: 'var(--space-sm)'
             }}
           >
-            <span
-              style={{
-                fontSize: 'var(--text-xs)',
-                letterSpacing: 'var(--ls-wider)',
-                textTransform: 'uppercase',
-                color: 'var(--color-text-tertiary)',
-                fontWeight: '500'
-              }}
-            >
-              Filter by Region
-            </span>
-            <button
-              onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '0.35rem',
-                fontSize: 'var(--text-xs)',
-                color: 'var(--color-accent)',
-                letterSpacing: '0.04em',
-                cursor: 'pointer'
-              }}
-            >
-              <Icon name="filter" size={13} />
-              <span>{showAdvancedFilters ? 'Collapse Filters' : 'Refine by Climate, Style & Budget'}</span>
-            </button>
-          </div>
+            {/* Main Category Capsule Pills (Motionsites Style) */}
+            <div className="motionsites-capsule-bar">
+              {REGIONS.map((region) => {
+                const isActive = selectedRegion === region;
+                return (
+                  <button
+                    key={region}
+                    type="button"
+                    onClick={() => setSelectedRegion(region)}
+                    className={`motionsites-pill-btn ${isActive ? 'active gold-accent' : ''}`}
+                  >
+                    {region === 'All' ? 'All Sanctuaries' : region}
+                  </button>
+                );
+              })}
+            </div>
 
-          <div
-            className="filter-bar-scrollable"
-            style={{
-              display: 'flex',
-              gap: 'var(--space-xs)',
-              flexWrap: 'wrap'
-            }}
-          >
-            {REGIONS.map((region) => (
+            {/* Right Dropdown Pills */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem', flexWrap: 'wrap' }}>
               <button
-                key={region}
-                className={`pill-filter ${selectedRegion === region ? 'active' : ''}`}
-                onClick={() => setSelectedRegion(region)}
+                type="button"
+                onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
+                className="motionsites-dropdown-btn"
+                style={{
+                  borderColor: showAdvancedFilters || hasActiveFilters ? 'var(--gold)' : '#3b3b3b',
+                  color: showAdvancedFilters || hasActiveFilters ? 'var(--text-primary)' : 'rgba(255, 255, 255, 0.72)'
+                }}
               >
-                {region}
+                <Icon name="filter" size={13} style={{ color: 'var(--gold)' }} />
+                <span>Filters {hasActiveFilters && '(Active)'}</span>
+                <Icon name="chevron-down" size={13} />
               </button>
-            ))}
-          </div>
-        </div>
 
-        {/* Collapsible Advanced Criteria Filters */}
-        {showAdvancedFilters && (
-          <div
-            style={{
-              paddingTop: 'var(--space-md)',
-              borderTop: '1px solid var(--color-border)',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-              gap: 'var(--space-md)',
-              animation: 'modal-fade-in 0.25s ease'
-            }}
-          >
-            {/* Climate */}
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: 'var(--ls-wider)',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
-                  marginBottom: '6px'
-                }}
-              >
-                Climate
-              </label>
-              <select
-                className="input-field"
-                value={selectedClimate}
-                onChange={(e) => setSelectedClimate(e.target.value)}
-                style={{ padding: '0.65rem 1rem', fontSize: 'var(--text-sm)' }}
-              >
-                {CLIMATES.map((c) => (
-                  <option key={c} value={c}>
-                    {c}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Travel Style */}
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: 'var(--ls-wider)',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
-                  marginBottom: '6px'
-                }}
-              >
-                Travel Style
-              </label>
-              <select
-                className="input-field"
-                value={selectedStyle}
-                onChange={(e) => setSelectedStyle(e.target.value)}
-                style={{ padding: '0.65rem 1rem', fontSize: 'var(--text-sm)' }}
-              >
-                {TRAVEL_STYLES.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Budget */}
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: 'var(--ls-wider)',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
-                  marginBottom: '6px'
-                }}
-              >
-                Budget Level
-              </label>
-              <select
-                className="input-field"
-                value={selectedBudget}
-                onChange={(e) => setSelectedBudget(e.target.value)}
-                style={{ padding: '0.65rem 1rem', fontSize: 'var(--text-sm)' }}
-              >
-                {BUDGET_LEVELS.map((b) => (
-                  <option key={b} value={b}>
-                    {b}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Season */}
-            <div>
-              <label
-                style={{
-                  display: 'block',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: 'var(--ls-wider)',
-                  textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
-                  marginBottom: '6px'
-                }}
-              >
-                Best Season
-              </label>
-              <select
-                className="input-field"
-                value={selectedSeason}
-                onChange={(e) => setSelectedSeason(e.target.value)}
-                style={{ padding: '0.65rem 1rem', fontSize: 'var(--text-sm)' }}
-              >
-                {SEASONS.map((s) => (
-                  <option key={s} value={s}>
-                    {s}
-                  </option>
-                ))}
-              </select>
+              {hasActiveFilters && (
+                <button
+                  type="button"
+                  onClick={resetAllFilters}
+                  className="motionsites-dropdown-btn"
+                  style={{ color: '#e53e3e', borderColor: 'rgba(229, 62, 62, 0.4)' }}
+                >
+                  <Icon name="close" size={12} />
+                  <span>Reset</span>
+                </button>
+              )}
             </div>
           </div>
-        )}
 
-        {/* Active Filter Bar & Results Count */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'space-between',
-            marginTop: 'var(--space-md)',
-            paddingTop: 'var(--space-xs)',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--color-text-tertiary)'
-          }}
-        >
-          <span>
-            Displaying <strong style={{ color: 'var(--color-text-primary)' }}>{filteredDestinations.length}</strong> extraordinary destinations
-          </span>
-
-          {hasActiveFilters && (
-            <button
-              onClick={resetAllFilters}
+          {/* Advanced Multi-Parameter Dropdowns (Expanded) */}
+          {showAdvancedFilters && (
+            <div
               style={{
-                color: 'var(--color-accent)',
-                textDecoration: 'underline',
-                cursor: 'pointer',
-                letterSpacing: '0.04em'
+                width: '100%',
+                backgroundColor: 'var(--surface-elevated)',
+                border: '1px solid var(--border)',
+                borderRadius: '14px',
+                padding: 'var(--space-md) var(--space-lg)',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
+                gap: 'var(--space-md)',
+                animation: 'modal-scale-up 0.25s ease-out'
               }}
             >
-              Reset All Filters
-            </button>
+              {/* Climate */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                  Climate
+                </label>
+                <select
+                  className="input-field"
+                  value={selectedClimate}
+                  onChange={(e) => setSelectedClimate(e.target.value)}
+                  style={{ padding: '0.45rem 0.85rem', fontSize: 'var(--text-xs)' }}
+                >
+                  {CLIMATES.map((c) => (
+                    <option key={c} value={c}>
+                      {c === 'All' ? 'Any Climate' : c}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Travel Style */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                  Travel Style
+                </label>
+                <select
+                  className="input-field"
+                  value={selectedStyle}
+                  onChange={(e) => setSelectedStyle(e.target.value)}
+                  style={{ padding: '0.45rem 0.85rem', fontSize: 'var(--text-xs)' }}
+                >
+                  {TRAVEL_STYLES.map((s) => (
+                    <option key={s} value={s}>
+                      {s === 'All' ? 'Any Style' : s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Budget */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                  Budget Tier
+                </label>
+                <select
+                  className="input-field"
+                  value={selectedBudget}
+                  onChange={(e) => setSelectedBudget(e.target.value)}
+                  style={{ padding: '0.45rem 0.85rem', fontSize: 'var(--text-xs)' }}
+                >
+                  {BUDGET_LEVELS.map((b) => (
+                    <option key={b} value={b}>
+                      {b === 'All' ? 'Any Budget' : b}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Best Season */}
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '4px' }}>
+                  Season
+                </label>
+                <select
+                  className="input-field"
+                  value={selectedSeason}
+                  onChange={(e) => setSelectedSeason(e.target.value)}
+                  style={{ padding: '0.45rem 0.85rem', fontSize: 'var(--text-xs)' }}
+                >
+                  {SEASONS.map((s) => (
+                    <option key={s} value={s}>
+                      {s === 'All' ? 'Any Season' : s}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
           )}
         </div>
       </div>
 
-      {/* Asymmetric Editorial CSS Grid Layout */}
+      {/* Destination Feature Grid (Responsive Motionsites Prompt Cards) */}
       {filteredDestinations.length > 0 ? (
         <div
-          className="destination-editorial-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(3, 1fr)',
-            gap: 'var(--space-lg)',
-            gridAutoFlow: 'dense'
+            gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+            gap: 'var(--space-xl)'
           }}
         >
-          {filteredDestinations.map((destination) => (
+          {filteredDestinations.map((dest) => (
             <DestinationCard
-              key={destination.id}
-              destination={destination}
-              variant={destination.gridVariant || 'standard'}
+              key={dest.id}
+              destination={dest}
+              variant="standard"
             />
           ))}
         </div>
       ) : (
         /* Empty State */
         <div className="empty-state">
-          <div className="empty-state-icon">
-            <Icon name="compass" size={44} />
-          </div>
-          <h3 className="empty-state-title">We couldn’t find that place.</h3>
+          <Icon name="compass" size={44} className="empty-state-icon" />
+          <h3 className="empty-state-title">No Sanctuaries Matched</h3>
           <p className="empty-state-desc">
-            No destinations match the criteria "{searchQuery || selectedRegion || selectedStyle}". Try broadening your horizons or resetting filters.
+            No destinations align with your current search query or combination of filters. Try clearing your parameters to reveal all available expeditions.
           </p>
-          <button onClick={resetAllFilters} className="btn btn-primary btn-sm">
-            <span>View All Destinations</span>
-            <Icon name="arrow-right" size={14} />
+          <button onClick={resetAllFilters} className="btn btn-secondary btn-sm">
+            <span>Reset All Filters</span>
           </button>
         </div>
       )}

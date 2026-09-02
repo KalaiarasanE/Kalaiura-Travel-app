@@ -1,6 +1,6 @@
 /* ==============================================================================
-   AERORA — FAMOUS PLACE EDITORIAL CARD
-   Visually rich landmark card with micro-interactions and journey integration
+   AERORA — FAMOUS PLACE CONTENT FEATURE CARD
+   Styled with exact motionsites-ai prompt-card-hover pattern & visual language
    ============================================================================== */
 
 import React from 'react';
@@ -21,153 +21,172 @@ export function PlaceCard({ place }) {
   };
 
   return (
-    <article
-      className="famous-place-card"
-      style={{
-        backgroundColor: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-xs)',
-        overflow: 'hidden',
-        display: 'flex',
-        flexDirection: 'column',
-        transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s ease, box-shadow 0.4s ease',
-        boxShadow: 'var(--shadow-subtle)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-5px)';
-        e.currentTarget.style.borderColor = 'rgba(217, 155, 79, 0.4)';
-        e.currentTarget.style.boxShadow = '0 14px 36px rgba(0, 0, 0, 0.55)';
-        const img = e.currentTarget.querySelector('img');
-        if (img) img.style.transform = 'scale(1.05)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'var(--color-border)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-subtle)';
-        const img = e.currentTarget.querySelector('img');
-        if (img) img.style.transform = 'scale(1)';
-      }}
-    >
-      {/* Visual Image Banner with Category Tag */}
-      <div style={{ position: 'relative', overflow: 'hidden', width: '100%' }}>
+    <article className="prompt-card-hover">
+      {/* 1. Upper Media Showcase (Motionsites Aspect-Ratio Media Wrap) */}
+      <div className="card-media-wrap">
         <EditorialImage
           src={place.image}
           alt={`Landmark view of ${place.name}`}
           aspectRatio="16/10"
           fallbackType="landmark"
-          style={{ transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' }}
         />
 
+        {/* Dark Vignette Overlay */}
         <div
           style={{
             position: 'absolute',
-            top: 'var(--space-sm)',
-            left: 'var(--space-sm)',
+            inset: 0,
+            background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.2) 0%, transparent 40%, rgba(8, 9, 12, 0.8) 100%)',
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Floating Category Tag Pill (Top Left) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
             zIndex: 2
           }}
         >
           <span
-            className="badge badge-accent"
             style={{
-              backgroundColor: 'rgba(9, 10, 14, 0.85)',
-              backdropFilter: 'blur(8px)',
-              WebkitBackdropFilter: 'blur(8px)'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(8, 9, 12, 0.72)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              fontSize: '0.68rem',
+              letterSpacing: '0.1em',
+              textTransform: 'uppercase',
+              fontWeight: '600',
+              color: 'var(--gold)'
             }}
           >
             {place.category}
           </span>
         </div>
-      </div>
 
-      {/* Place Details */}
-      <div
-        style={{
-          padding: 'var(--space-lg)',
-          display: 'flex',
-          flexDirection: 'column',
-          flex: 1,
-          justifyContent: 'space-between',
-          gap: 'var(--space-md)'
-        }}
-      >
-        <div>
-          {/* Location Line */}
-          <div
+        {/* Floating Duration Pill (Top Right) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            zIndex: 2
+          }}
+        >
+          <span
             style={{
-              display: 'flex',
+              display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.35rem',
-              fontSize: '0.72rem',
-              color: 'var(--color-text-tertiary)',
-              letterSpacing: '0.05em',
-              textTransform: 'uppercase',
-              marginBottom: '4px'
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(8, 9, 12, 0.72)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              fontSize: '0.68rem',
+              color: 'var(--text-primary)'
             }}
           >
-            <Icon name="map-pin" size={12} style={{ color: 'var(--color-accent)' }} />
-            <span>{place.location}</span>
-          </div>
+            <Icon name="compass" size={12} style={{ color: 'var(--gold)' }} />
+            <span>{place.recommendedDuration}</span>
+          </span>
+        </div>
+      </div>
 
+      {/* 2. Lower Meta Information (Motionsites Header + Action Layout) */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 'var(--space-md)',
+          padding: '0 4px',
+          marginBottom: '6px'
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
           <h3
             style={{
-              fontSize: '1.45rem',
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.35rem',
               fontWeight: '400',
-              color: 'var(--color-text-primary)',
-              lineHeight: '1.2',
-              marginBottom: 'var(--space-xs)'
+              lineHeight: 1.2,
+              color: 'var(--text-primary)',
+              margin: 0,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
             }}
           >
             {place.name}
           </h3>
-
-          <p
+          <span
             style={{
-              fontSize: 'var(--text-sm)',
-              color: '#adb1bd',
-              lineHeight: 'var(--lh-normal)',
-              marginBottom: 'var(--space-md)'
+              display: 'block',
+              fontSize: '0.72rem',
+              color: 'var(--text-muted)',
+              marginTop: '2px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em'
             }}
           >
-            {place.description}
-          </p>
-
-          {/* Time & Duration Telemetry */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '6px',
-              padding: 'var(--space-sm) 0',
-              borderTop: '1px solid var(--color-border)',
-              borderBottom: '1px solid var(--color-border)',
-              fontSize: 'var(--text-xs)',
-              color: 'var(--color-text-secondary)'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Icon name="clock" size={13} style={{ color: 'var(--color-accent)' }} />
-              <span><strong>Duration:</strong> {place.recommendedDuration}</span>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <Icon name="sun" size={13} style={{ color: 'var(--color-accent)' }} />
-              <span><strong>Best Time:</strong> {place.bestTime}</span>
-            </div>
-          </div>
+            Optimal: {place.bestTimeToVisit}
+          </span>
         </div>
 
-        {/* Action Button: Add to Journey */}
+        {/* Bookmark Quick Action */}
+        <button
+          onClick={toggleJourneyStatus}
+          className="btn-icon"
+          title={isAdded ? 'Remove from Journey' : 'Add to Journey'}
+          aria-label={isAdded ? `Remove ${place.name} from Journey` : `Add ${place.name} to Journey`}
+          style={{
+            flexShrink: 0,
+            width: '32px',
+            height: '32px',
+            backgroundColor: isAdded ? 'var(--gold)' : 'rgba(255, 255, 255, 0.03)',
+            borderColor: isAdded ? 'var(--gold)' : 'var(--border)',
+            color: isAdded ? '#08090C' : 'var(--text-secondary)'
+          }}
+        >
+          <Icon name={isAdded ? 'check' : 'bookmark'} size={14} />
+        </button>
+      </div>
+
+      {/* Description Snippet */}
+      <p
+        style={{
+          fontSize: '0.82rem',
+          color: 'var(--text-secondary)',
+          lineHeight: 'var(--lh-normal)',
+          margin: '0 4px 12px 4px',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden'
+        }}
+      >
+        {place.description}
+      </p>
+
+      {/* 3. Bottom Action Toggle Bar */}
+      <div style={{ padding: '0 4px', marginTop: 'auto' }}>
         <button
           onClick={toggleJourneyStatus}
           className={`btn ${isAdded ? 'btn-primary' : 'btn-secondary'} btn-sm`}
-          aria-label={isAdded ? `Remove ${place.name} from personal journey` : `Add ${place.name} to personal journey`}
-          style={{
-            width: '100%',
-            transition: 'all 0.25s ease'
-          }}
+          style={{ width: '100%' }}
         >
-          <Icon name={isAdded ? 'check' : 'plus'} size={14} />
-          <span>{isAdded ? 'Added to Journey' : 'Add to Journey'}</span>
+          <Icon name={isAdded ? 'check' : 'plus'} size={13} />
+          <span>{isAdded ? 'Saved in Journey' : 'Add to Journey'}</span>
         </button>
       </div>
     </article>

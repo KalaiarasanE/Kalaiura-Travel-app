@@ -1,6 +1,6 @@
 /* ==============================================================================
-   AERORA — DESTINATION DETAIL EXPERIENCE
-   Comprehensive dedicated sanctuary profile with telemetry, narratives & landmarks
+   AERORA — DESTINATION DETAIL & CONTENT FEATURES
+   Styled with exact motionsites-ai feature card patterns & typography
    ============================================================================== */
 
 import React from 'react';
@@ -53,7 +53,7 @@ export function DestinationDetail({ destination }) {
             style={{
               position: 'absolute',
               inset: 0,
-              background: 'linear-gradient(to bottom, rgba(9, 10, 14, 0.4) 0%, rgba(9, 10, 14, 0.6) 50%, rgba(9, 10, 14, 0.98) 100%)',
+              background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.4) 0%, rgba(8, 9, 12, 0.65) 50%, #08090C 100%)',
               pointerEvents: 'none'
             }}
           />
@@ -70,15 +70,15 @@ export function DestinationDetail({ destination }) {
               fontSize: 'var(--text-xs)',
               letterSpacing: 'var(--ls-wide)',
               textTransform: 'uppercase',
-              color: 'var(--color-text-tertiary)',
+              color: 'var(--text-muted)',
               marginBottom: 'var(--space-md)'
             }}
           >
-            <Link to="/" style={{ color: 'var(--color-text-secondary)' }}>Home</Link>
+            <Link to="/" style={{ color: 'var(--text-secondary)' }}>Home</Link>
             <span>/</span>
-            <Link to="/destinations" style={{ color: 'var(--color-text-secondary)' }}>Destinations</Link>
+            <Link to="/destinations" style={{ color: 'var(--text-secondary)' }}>Destinations</Link>
             <span>/</span>
-            <span style={{ color: 'var(--color-accent)' }}>{destination.name}</span>
+            <span style={{ color: 'var(--gold)' }}>{destination.name}</span>
           </nav>
 
           <span className="eyebrow">{destination.country} · {destination.region}</span>
@@ -100,7 +100,7 @@ export function DestinationDetail({ destination }) {
           <p
             style={{
               fontSize: 'clamp(1.1rem, 2vw, 1.4rem)',
-              color: '#d4d8e2',
+              color: 'var(--text-secondary)',
               maxWidth: '780px',
               lineHeight: 'var(--lh-relaxed)',
               fontWeight: '300'
@@ -121,7 +121,7 @@ export function DestinationDetail({ destination }) {
         />
       </section>
 
-      {/* 3. "WHY GO" SECTION */}
+      {/* 3. "WHY GO" FEATURE PILLARS (MOTIONSITES CARD STYLE) */}
       <section className="container" style={{ padding: 'var(--space-3xl) 0' }}>
         <div className="section-header">
           <span className="eyebrow">The Editorial Perspective</span>
@@ -134,44 +134,55 @@ export function DestinationDetail({ destination }) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
             gap: 'var(--space-xl)'
           }}
         >
           {destination.whyGo?.map((pillar, idx) => (
             <div
               key={idx}
+              className="prompt-card-hover"
               style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-xs)',
-                padding: 'var(--space-xl)',
-                position: 'relative',
-                transition: 'border-color var(--transition-fast)'
+                padding: 'var(--space-2xl) var(--space-xl)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'flex-start'
               }}
             >
               <div
                 style={{
-                  fontFamily: 'var(--font-accent)',
-                  fontSize: '2rem',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '0.25rem 0.75rem',
+                  borderRadius: '9999px',
+                  backgroundColor: 'rgba(224, 162, 77, 0.1)',
+                  border: '1px solid rgba(224, 162, 77, 0.3)',
+                  color: 'var(--gold)',
+                  fontSize: '0.72rem',
                   fontWeight: '600',
-                  color: 'rgba(217, 155, 79, 0.3)',
-                  marginBottom: 'var(--space-xs)'
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  width: 'fit-content',
+                  marginBottom: 'var(--space-md)'
                 }}
               >
-                0{idx + 1}
+                <span>Pillar 0{idx + 1}</span>
               </div>
+
               <h3
                 style={{
-                  fontSize: '1.35rem',
-                  fontWeight: '500',
-                  color: 'var(--color-text-primary)',
+                  fontFamily: 'var(--font-display)',
+                  fontSize: '1.5rem',
+                  fontWeight: '400',
+                  color: 'var(--text-primary)',
                   marginBottom: 'var(--space-sm)'
                 }}
               >
                 {pillar.title}
               </h3>
-              <p style={{ fontSize: 'var(--text-sm)', color: '#b2b6c2', lineHeight: 'var(--lh-relaxed)' }}>
+
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 'var(--lh-relaxed)', margin: 0 }}>
                 {pillar.body}
               </p>
             </div>
@@ -179,7 +190,7 @@ export function DestinationDetail({ destination }) {
         </div>
       </section>
 
-      {/* 4. "THE PLACES THAT DEFINE IT" SECTION */}
+      {/* 4. "THE PLACES THAT DEFINE IT" LANDMARKS */}
       <div className="container">
         <FamousPlaces
           places={destinationPlaces}
@@ -188,7 +199,7 @@ export function DestinationDetail({ destination }) {
         />
       </div>
 
-      {/* 5. "WHEN TO GO" SECTION */}
+      {/* 5. "WHEN TO GO" CLIMATIC RHYTHMS (MOTIONSITES CARD STYLE) */}
       <section className="container" style={{ padding: 'var(--space-3xl) 0' }}>
         <div className="section-header">
           <span className="eyebrow">Climatic Rhythms</span>
@@ -201,46 +212,45 @@ export function DestinationDetail({ destination }) {
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
             gap: 'var(--space-md)'
           }}
         >
           {destination.whenToGo?.seasons.map((season, idx) => (
             <div
               key={idx}
-              style={{
-                backgroundColor: 'var(--color-surface)',
-                border: '1px solid var(--color-border)',
-                borderRadius: 'var(--radius-xs)',
-                padding: 'var(--space-lg)'
-              }}
+              className="prompt-card-hover"
+              style={{ padding: 'var(--space-lg)' }}
             >
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: '0.45rem',
-                  color: 'var(--color-accent)',
-                  fontSize: 'var(--text-xs)',
-                  letterSpacing: 'var(--ls-wide)',
+                  color: 'var(--gold)',
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.12em',
                   textTransform: 'uppercase',
+                  fontWeight: '600',
                   marginBottom: 'var(--space-xs)'
                 }}
               >
                 <Icon name="calendar" size={13} />
-                <span>Season Profile</span>
+                <span>Seasonal Phase</span>
               </div>
+
               <h4
                 style={{
-                  fontSize: '1.2rem',
+                  fontSize: '1.25rem',
                   fontWeight: '500',
-                  color: 'var(--color-text-primary)',
+                  color: 'var(--text-primary)',
                   marginBottom: 'var(--space-xs)'
                 }}
               >
                 {season.name}
               </h4>
-              <p style={{ fontSize: 'var(--text-sm)', color: '#a7abb6', lineHeight: 'var(--lh-relaxed)' }}>
+
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 'var(--lh-relaxed)', margin: 0 }}>
                 {season.note}
               </p>
             </div>
@@ -248,7 +258,7 @@ export function DestinationDetail({ destination }) {
         </div>
       </section>
 
-      {/* 6. "LOCAL NOTES" SECTION */}
+      {/* 6. "LOCAL NOTES" INSIDER ETIQUETTE (MOTIONSITES CARD STYLE) */}
       <section className="container" style={{ padding: 'var(--space-3xl) 0' }}>
         <div className="section-header">
           <span className="eyebrow">Insider Etiquette</span>
@@ -268,24 +278,26 @@ export function DestinationDetail({ destination }) {
           {destination.localNotes?.map((note, idx) => (
             <div
               key={idx}
+              className="prompt-card-hover"
               style={{
-                borderLeft: '2px solid var(--color-accent)',
-                paddingLeft: 'var(--space-lg)',
-                paddingTop: 'var(--space-xs)',
-                paddingBottom: 'var(--space-xs)'
+                padding: 'var(--space-xl)',
+                borderLeft: '3px solid var(--gold)'
               }}
             >
+              <div style={{ fontSize: '0.68rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.12em', fontWeight: '600', marginBottom: '4px' }}>
+                Cultural Note
+              </div>
               <h4
                 style={{
-                  fontSize: '1.15rem',
+                  fontSize: '1.2rem',
                   fontWeight: '500',
-                  color: 'var(--color-text-primary)',
+                  color: 'var(--text-primary)',
                   marginBottom: 'var(--space-xs)'
                 }}
               >
                 {note.label}
               </h4>
-              <p style={{ fontSize: 'var(--text-sm)', color: '#b5b9c5', lineHeight: 'var(--lh-relaxed)' }}>
+              <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 'var(--lh-relaxed)', margin: 0 }}>
                 {note.detail}
               </p>
             </div>
@@ -293,77 +305,68 @@ export function DestinationDetail({ destination }) {
         </div>
       </section>
 
-      {/* 7. "PLAN YOUR DAYS" SECTION */}
+      {/* 7. "PLAN YOUR DAYS" LAUNCHPAD SECTION */}
       <section className="container" style={{ padding: 'var(--space-3xl) 0' }}>
         <div
+          className="prompt-card-hover"
           style={{
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-accent-border)',
-            borderRadius: 'var(--radius-sm)',
-            padding: 'var(--space-3xl) var(--space-2xl)',
+            padding: 'clamp(2.5rem, 5vw, 4rem)',
             textAlign: 'center',
             position: 'relative',
-            overflow: 'hidden',
-            boxShadow: 'var(--shadow-overlay)'
+            overflow: 'hidden'
           }}
         >
-          {/* Subtle Ambient Glow */}
+          {/* Radial Gold Ambient Glow */}
           <div
             style={{
               position: 'absolute',
               top: '50%',
               left: '50%',
               transform: 'translate(-50%, -50%)',
-              width: '400px',
-              height: '300px',
-              background: 'radial-gradient(circle, var(--color-accent-glow) 0%, transparent 70%)',
+              width: '500px',
+              height: '350px',
+              background: 'radial-gradient(circle, rgba(224, 162, 77, 0.14) 0%, transparent 70%)',
               pointerEvents: 'none'
             }}
           />
 
-          <span className="eyebrow" style={{ justifyContent: 'center' }}>
-            Structured Expedition
-          </span>
-
-          <h2
-            style={{
-              fontSize: 'clamp(2rem, 3.5vw, 3rem)',
-              fontWeight: '300',
-              marginBottom: 'var(--space-sm)',
-              color: 'var(--color-text-primary)'
-            }}
-          >
-            Plan Your Days in {destination.name}
-          </h2>
-
-          <p
-            style={{
-              fontSize: 'var(--text-md)',
-              color: 'var(--color-text-secondary)',
-              maxWidth: '620px',
-              margin: '0 auto var(--space-2xl)',
-              lineHeight: 'var(--lh-relaxed)'
-            }}
-          >
-            Synthesize a bespoke day-by-day itinerary calibrated for {destination.name}’s local tempo, seasonal light, and landmark distances.
-          </p>
-
-          <div style={{ display: 'flex', justifyContent: 'center', gap: 'var(--space-md)', flexWrap: 'wrap' }}>
-            <button
-              onClick={() => navigate('/planner')}
-              className="btn btn-primary btn-lg"
+          <div style={{ position: 'relative', zIndex: 1, maxWidth: '650px', margin: '0 auto' }}>
+            <span className="eyebrow" style={{ justifyContent: 'center' }}>
+              Day-by-Day Synthesis
+            </span>
+            <h3
+              style={{
+                fontFamily: 'var(--font-display)',
+                fontSize: 'clamp(2rem, 4vw, 3rem)',
+                fontWeight: '300',
+                textTransform: 'uppercase',
+                color: 'var(--text-primary)',
+                marginBottom: 'var(--space-sm)'
+              }}
             >
-              <Icon name="sparkles" size={16} />
-              <span>Launch AI Itinerary Builder</span>
-            </button>
+              Ready to Navigate {destination.name}?
+            </h3>
+            <p style={{ fontSize: 'var(--text-sm)', color: 'var(--text-secondary)', lineHeight: 'var(--lh-relaxed)', marginBottom: 'var(--space-xl)' }}>
+              Let our AI Voyage Architect compose an unhurried, day-by-day expedition schedule calibrated for {destination.name}’s seasonal light and pacing.
+            </p>
 
-            <button
-              onClick={() => navigate('/guide')}
-              className="btn btn-secondary btn-lg"
-            >
-              <span>Consult AERORA Guide</span>
-              <Icon name="arrow-right" size={14} />
-            </button>
+            <div style={{ display: 'flex', gap: 'var(--space-md)', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <button
+                onClick={() => navigate('/planner')}
+                className="btn btn-primary"
+              >
+                <span>Synthesize {destination.name} Plan</span>
+                <Icon name="sparkles" size={15} />
+              </button>
+
+              <button
+                onClick={() => navigate('/guide')}
+                className="btn btn-secondary"
+              >
+                <span>Consult AI Guide</span>
+                <Icon name="arrow-right" size={15} />
+              </button>
+            </div>
           </div>
         </div>
       </section>

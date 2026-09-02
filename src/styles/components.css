@@ -412,3 +412,122 @@ select.input-field option {
     transform: scale(1.15);
   }
 }
+
+/* -----------------------------------------------------------------------------
+   MOTIONSITES REFERENCE DESIGN: DESTINATION CONTENT FEATURES
+   Exact classes and styling extracted from motionsites-ai reference
+   ----------------------------------------------------------------------------- */
+.prompt-card-hover {
+  transition: all 0.3s ease-out;
+  border-radius: 18px;
+  background-color: var(--surface-elevated);
+  border: 1px solid var(--border);
+  padding: 12px;
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.prompt-card-hover:hover {
+  transform: translateY(-4px);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.65), 0 0 24px rgba(224, 162, 77, 0.2);
+}
+
+.prompt-card-hover .card-media-wrap {
+  position: relative;
+  width: 100%;
+  border-radius: 12px;
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background-color: #0d0f13;
+  margin-bottom: 12px;
+}
+
+.prompt-card-hover .card-media-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), filter 0.5s ease;
+}
+
+.prompt-card-hover:hover .card-media-wrap img {
+  transform: scale(1.04);
+}
+
+/* MotionSites Capsule Filter Bar */
+.motionsites-capsule-bar {
+  display: inline-flex;
+  max-width: 100%;
+  align-items: center;
+  padding: 4px;
+  border-radius: 9999px;
+  background-color: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  mask-image: linear-gradient(to right, rgb(0, 0, 0) 0px, rgb(0, 0, 0) calc(100% - 48px), transparent 100%);
+}
+
+.motionsites-capsule-bar::-webkit-scrollbar {
+  display: none;
+}
+
+.motionsites-pill-btn {
+  position: relative;
+  padding: 0.45rem 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  transition: all 0.2s ease-out;
+  white-space: nowrap;
+  cursor: pointer;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  border: 1px solid transparent;
+}
+
+.motionsites-pill-btn:hover {
+  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.motionsites-pill-btn.active {
+  background-color: #202020;
+  color: #ffffff;
+  border: 1px solid #3b3b3b;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+.motionsites-pill-btn.active.gold-accent {
+  background-color: #202020;
+  color: var(--gold);
+  border-color: rgba(224, 162, 77, 0.4);
+}
+
+/* Motionsites Dropdown Capsule Button */
+.motionsites-dropdown-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.45rem 1.15rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-radius: 9999px;
+  white-space: nowrap;
+  color: rgba(255, 255, 255, 0.72);
+  background-color: #202020;
+  border: 1px solid #3b3b3b;
+  cursor: pointer;
+  transition: all 0.2s ease-out;
+}
+
+.motionsites-dropdown-btn:hover {
+  color: #ffffff;
+  border-color: rgba(224, 162, 77, 0.5);
+  background-color: #262626;
+}
+

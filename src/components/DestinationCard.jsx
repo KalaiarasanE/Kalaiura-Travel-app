@@ -1,230 +1,256 @@
 /* ==============================================================================
-   AERORA — EDITORIAL DESTINATION CARD
-   Asymmetric layout card with weather telemetry, styles, and micro-interactions
+   AERORA — DESTINATION CONTENT FEATURE CARD
+   Styled with exact motionsites-ai prompt-card-hover pattern & visual language
    ============================================================================== */
 
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { EditorialImage } from './EditorialImage';
 import { Icon } from './Icons';
+import { useJourneyContext } from '../context/JourneyContext';
 
 export function DestinationCard({ destination, variant = 'standard' }) {
   const isFeatured = variant === 'card-featured';
   const isTall = variant === 'card-tall';
   const isWide = variant === 'card-wide';
+  const { activeDestination, setActiveDestinationId } = useJourneyContext();
+
+  const isCurrentFocus = activeDestination?.id === destination.id;
 
   return (
     <article
-      className={`destination-card ${variant}`}
+      className="prompt-card-hover"
       style={{
-        position: 'relative',
-        borderRadius: 'var(--radius-xs)',
-        overflow: 'hidden',
-        border: '1px solid var(--color-border)',
-        backgroundColor: 'var(--color-surface)',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'flex-end',
-        minHeight: isFeatured ? '540px' : isTall ? '540px' : '420px',
         gridColumn: isFeatured || isWide ? 'span 2' : 'span 1',
         gridRow: isTall ? 'span 2' : 'span 1',
-        transition: 'transform 0.45s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s ease, box-shadow 0.45s ease',
-        boxShadow: 'var(--shadow-subtle)'
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.transform = 'translateY(-6px)';
-        e.currentTarget.style.borderColor = 'rgba(217, 155, 79, 0.45)';
-        e.currentTarget.style.boxShadow = '0 16px 40px rgba(0, 0, 0, 0.6)';
-        const img = e.currentTarget.querySelector('img');
-        if (img) img.style.transform = 'scale(1.06)';
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.transform = 'translateY(0)';
-        e.currentTarget.style.borderColor = 'var(--color-border)';
-        e.currentTarget.style.boxShadow = 'var(--shadow-subtle)';
-        const img = e.currentTarget.querySelector('img');
-        if (img) img.style.transform = 'scale(1)';
+        minHeight: isFeatured ? '480px' : isTall ? '480px' : '380px'
       }}
     >
-      {/* Background Image with Ambient Gradient */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: 0
-        }}
-      >
+      {/* 1. Upper Media Showcase (Motionsites Aspect-Ratio Container) */}
+      <div className="card-media-wrap" style={{ aspectRatio: isTall ? '4/5' : '16/10' }}>
         <EditorialImage
           src={destination.cardImage}
           alt={`Scenic perspective of ${destination.name}, ${destination.country}`}
           style={{
+            width: '100%',
             height: '100%',
-            objectFit: 'cover',
-            transition: 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1)'
+            objectFit: 'cover'
           }}
         />
 
-        {/* Cinematic Multi-stop Dark Vignette */}
+        {/* Ambient Dark Gradient on Image */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(180deg, rgba(9, 10, 14, 0.15) 0%, rgba(9, 10, 14, 0.5) 45%, rgba(9, 10, 14, 0.95) 100%)',
+            background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.2) 0%, transparent 40%, rgba(8, 9, 12, 0.85) 100%)',
             pointerEvents: 'none'
           }}
         />
-      </div>
 
-      {/* Top Floating Telemetry Chips */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 'var(--space-md)',
-          left: 'var(--space-md)',
-          right: 'var(--space-md)',
-          zIndex: 2,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          pointerEvents: 'none'
-        }}
-      >
-        <span
-          className="badge badge-accent"
-          style={{
-            backgroundColor: 'rgba(9, 10, 14, 0.75)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)'
-          }}
-        >
-          {destination.region}
-        </span>
-
-        {/* Weather Snapshot */}
-        <span
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.35rem',
-            padding: '0.3rem 0.65rem',
-            borderRadius: 'var(--radius-xs)',
-            backgroundColor: 'rgba(9, 10, 14, 0.75)',
-            backdropFilter: 'blur(8px)',
-            WebkitBackdropFilter: 'blur(8px)',
-            fontSize: 'var(--text-xs)',
-            color: 'var(--color-text-primary)',
-            border: '1px solid var(--color-border)'
-          }}
-        >
-          <Icon name="sun" size={13} style={{ color: 'var(--color-accent)' }} />
-          <span>{destination.defaultWeather.temp}°C · {destination.defaultWeather.condition}</span>
-        </span>
-      </div>
-
-      {/* Card Editorial Information */}
-      <div
-        style={{
-          position: 'relative',
-          zIndex: 2,
-          padding: 'var(--space-lg)',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 'var(--space-xs)'
-        }}
-      >
-        <span
-          style={{
-            fontFamily: 'var(--font-accent)',
-            fontSize: 'var(--text-xs)',
-            letterSpacing: '0.22em',
-            textTransform: 'uppercase',
-            color: 'var(--color-accent)'
-          }}
-        >
-          {destination.country}
-        </span>
-
-        <h3
-          style={{
-            fontSize: isFeatured ? '2.4rem' : '1.85rem',
-            fontWeight: '300',
-            color: 'var(--color-text-primary)',
-            margin: '2px 0 6px 0',
-            lineHeight: 1.1
-          }}
-        >
-          {destination.name}
-        </h3>
-
-        <p
-          style={{
-            fontSize: 'var(--text-sm)',
-            color: '#c2c6d1',
-            lineHeight: 'var(--lh-normal)',
-            marginBottom: 'var(--space-sm)',
-            display: '-webkit-box',
-            WebkitLineClamp: isTall ? 4 : 2,
-            WebkitBoxOrient: 'vertical',
-            overflow: 'hidden'
-          }}
-        >
-          {destination.shortDescription}
-        </p>
-
-        {/* Travel Style Pills & Best Season */}
+        {/* Floating Category Tag Pill (Top Left) */}
         <div
           style={{
-            display: 'flex',
-            flexWrap: 'wrap',
-            alignItems: 'center',
-            gap: '0.4rem',
-            marginBottom: 'var(--space-md)'
+            position: 'absolute',
+            top: '10px',
+            left: '10px',
+            zIndex: 2
           }}
         >
           <span
             style={{
-              fontSize: '0.7rem',
-              letterSpacing: '0.08em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent-light)',
               display: 'inline-flex',
               alignItems: 'center',
-              gap: '0.25rem'
+              gap: '4px',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(8, 9, 12, 0.72)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              fontSize: '0.68rem',
+              letterSpacing: '0.12em',
+              textTransform: 'uppercase',
+              fontWeight: '600',
+              color: 'var(--gold)'
             }}
           >
-            <Icon name="calendar" size={12} />
-            Season: {destination.bestSeason}
+            {destination.region}
           </span>
-
-          <span style={{ color: 'var(--color-text-tertiary)', fontSize: '0.75rem' }}>•</span>
-
-          {destination.travelStyles.slice(0, 3).map((style) => (
-            <span
-              key={style}
-              style={{
-                fontSize: '0.68rem',
-                color: 'var(--color-text-secondary)',
-                letterSpacing: '0.05em'
-              }}
-            >
-              #{style}
-            </span>
-          ))}
         </div>
 
-        {/* Explore Button */}
-        <Link
-          to={`/destination/${destination.id}`}
-          className="btn btn-secondary btn-sm"
+        {/* Live Climate Telemetry Pill (Top Right) */}
+        <div
           style={{
-            alignSelf: 'flex-start',
-            borderColor: 'rgba(245, 242, 235, 0.25)',
-            backgroundColor: 'rgba(255, 255, 255, 0.06)'
+            position: 'absolute',
+            top: '10px',
+            right: '10px',
+            zIndex: 2
           }}
         >
-          <span>Explore Destination</span>
+          <span
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              padding: '0.25rem 0.65rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(8, 9, 12, 0.72)',
+              backdropFilter: 'blur(10px)',
+              WebkitBackdropFilter: 'blur(10px)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              fontSize: '0.68rem',
+              color: 'var(--text-primary)'
+            }}
+          >
+            <Icon name="sun" size={12} style={{ color: 'var(--gold)' }} />
+            <span>{destination.defaultWeather.temp}°C · {destination.defaultWeather.condition}</span>
+          </span>
+        </div>
+
+        {/* Quick Set Active Destination Focus Button (Bottom Right of Media) */}
+        <button
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            setActiveDestinationId(destination.id);
+          }}
+          className="btn-icon"
+          title={isCurrentFocus ? 'Active Focus' : 'Set as Focus'}
+          aria-label={`Set ${destination.name} as active journey focus`}
+          style={{
+            position: 'absolute',
+            bottom: '10px',
+            right: '10px',
+            zIndex: 2,
+            width: '32px',
+            height: '32px',
+            backgroundColor: isCurrentFocus ? 'var(--gold)' : 'rgba(8, 9, 12, 0.75)',
+            borderColor: isCurrentFocus ? 'var(--gold)' : 'rgba(255, 255, 255, 0.2)',
+            color: isCurrentFocus ? '#08090C' : 'var(--text-secondary)'
+          }}
+        >
+          <Icon name="compass" size={14} />
+        </button>
+      </div>
+
+      {/* 2. Lower Meta Information (Motionsites Header + Action Layout) */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'flex-start',
+          justifyContent: 'space-between',
+          gap: 'var(--space-md)',
+          padding: '0 4px',
+          marginBottom: '8px'
+        }}
+      >
+        <div style={{ minWidth: 0 }}>
+          <h3
+            style={{
+              fontFamily: 'var(--font-display)',
+              fontSize: '1.45rem',
+              fontWeight: '400',
+              lineHeight: 1.15,
+              color: 'var(--text-primary)',
+              letterSpacing: '0.02em',
+              textTransform: 'uppercase',
+              margin: 0,
+              whiteSpace: 'nowrap',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
+            {destination.name}
+          </h3>
+          <span
+            style={{
+              display: 'block',
+              fontSize: '0.72rem',
+              color: 'var(--text-muted)',
+              marginTop: '2px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em'
+            }}
+          >
+            {destination.country} · {destination.climate} Climate
+          </span>
+        </div>
+
+        {/* Direct Link to Sanctuary Profile */}
+        <Link
+          to={`/destination/${destination.id}`}
+          className="btn-icon"
+          title={`Explore ${destination.name}`}
+          aria-label={`Explore ${destination.name}`}
+          style={{
+            flexShrink: 0,
+            width: '32px',
+            height: '32px',
+            backgroundColor: 'rgba(255, 255, 255, 0.03)',
+            borderColor: 'var(--border)'
+          }}
+        >
           <Icon name="arrow-right" size={14} />
         </Link>
+      </div>
+
+      {/* Editorial Short Description */}
+      <p
+        style={{
+          fontSize: '0.82rem',
+          color: 'var(--text-secondary)',
+          lineHeight: 'var(--lh-normal)',
+          margin: '0 4px 10px 4px',
+          display: '-webkit-box',
+          WebkitLineClamp: 2,
+          WebkitBoxOrient: 'vertical',
+          overflow: 'hidden'
+        }}
+      >
+        {destination.shortDescription}
+      </p>
+
+      {/* 3. Motionsites-style Feature Tags Strip */}
+      <div
+        style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '6px',
+          padding: '0 4px',
+          marginTop: 'auto'
+        }}
+      >
+        {destination.travelStyles.slice(0, 2).map((style) => (
+          <span
+            key={style}
+            style={{
+              padding: '0.2rem 0.55rem',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              fontSize: '0.68rem',
+              color: 'var(--text-secondary)',
+              letterSpacing: '0.04em'
+            }}
+          >
+            {style}
+          </span>
+        ))}
+
+        <span
+          style={{
+            padding: '0.2rem 0.55rem',
+            borderRadius: '9999px',
+            backgroundColor: 'rgba(224, 162, 77, 0.08)',
+            border: '1px solid rgba(224, 162, 77, 0.22)',
+            fontSize: '0.68rem',
+            color: 'var(--gold)',
+            letterSpacing: '0.04em'
+          }}
+        >
+          Best in {destination.bestSeason}
+        </span>
       </div>
     </article>
   );
