@@ -152,13 +152,13 @@ export function Hero({ onExploreClick }) {
           }}
         >
           <span
+            className="pulse-radar-dot"
             style={{
               width: '6px',
               height: '6px',
               borderRadius: '50%',
               backgroundColor: 'var(--gold)',
-              display: 'inline-block',
-              boxShadow: '0 0 10px var(--gold)'
+              display: 'inline-block'
             }}
           />
           <span style={{ fontWeight: '500' }}>{weatherPillText}</span>
@@ -181,10 +181,10 @@ export function Hero({ onExploreClick }) {
         >
           GO WHERE <br />
           <span
+            className="animate-gradient-shift"
             style={{
               fontStyle: 'italic',
               fontWeight: '400',
-              color: 'var(--gold)',
               textShadow: '0 0 35px rgba(224, 162, 77, 0.3)'
             }}
           >

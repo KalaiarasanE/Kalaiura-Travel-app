@@ -64,8 +64,8 @@ export function FamousPlaces({ places = [], destinationName, title = 'The Places
           gap: 'var(--space-xl)'
         }}
       >
-        {places.map((place) => (
-          <PlaceCard key={place.id} place={place} />
+        {places.map((place, idx) => (
+          <PlaceCard key={place.id} place={place} index={idx} />
         ))}
       </div>
     </section>

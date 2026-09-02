@@ -58,7 +58,9 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
       {/* Section Header */}
       <div className="section-header centered">
         <span className="eyebrow">Editorial Directory</span>
-        <h2 className="section-title">Curated Sanctuaries</h2>
+        <h2 className="section-title">
+          Curated <span className="animate-gradient-shift">Sanctuaries</span>
+        </h2>
         <p className="section-subtitle">
           Depart from ordinary tourist itineraries. Explore sanctuary landscapes, architectural pinnacles, and cultural tapestries curated for the discerning traveler.
         </p>
@@ -286,11 +288,12 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
             gap: 'var(--space-xl)'
           }}
         >
-          {filteredDestinations.map((dest) => (
+          {filteredDestinations.map((dest, idx) => (
             <DestinationCard
               key={dest.id}
               destination={dest}
               variant="standard"
+              index={idx}
             />
           ))}
         </div>

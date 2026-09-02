@@ -9,7 +9,7 @@ import { EditorialImage } from './EditorialImage';
 import { Icon } from './Icons';
 import { useJourneyContext } from '../context/JourneyContext';
 
-export function DestinationCard({ destination, variant = 'standard' }) {
+export function DestinationCard({ destination, variant = 'standard', index = 0 }) {
   const isFeatured = variant === 'card-featured';
   const isTall = variant === 'card-tall';
   const isWide = variant === 'card-wide';
@@ -19,11 +19,12 @@ export function DestinationCard({ destination, variant = 'standard' }) {
 
   return (
     <article
-      className="prompt-card-hover"
+      className="prompt-card-hover animate-parallax-fade-up"
       style={{
         gridColumn: isFeatured || isWide ? 'span 2' : 'span 1',
         gridRow: isTall ? 'span 2' : 'span 1',
-        minHeight: isFeatured ? '480px' : isTall ? '480px' : '380px'
+        minHeight: isFeatured ? '480px' : isTall ? '480px' : '380px',
+        animationDelay: `${(index % 8) * 0.075}s`
       }}
     >
       {/* 1. Upper Media Showcase (Motionsites Aspect-Ratio Container) */}

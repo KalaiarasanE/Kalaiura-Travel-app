@@ -8,7 +8,7 @@ import { EditorialImage } from './EditorialImage';
 import { Icon } from './Icons';
 import { useJourneyContext } from '../context/JourneyContext';
 
-export function PlaceCard({ place }) {
+export function PlaceCard({ place, index = 0 }) {
   const { addPlace, removePlace, hasPlace } = useJourneyContext();
   const isAdded = hasPlace(place.id);
 
@@ -21,7 +21,10 @@ export function PlaceCard({ place }) {
   };
 
   return (
-    <article className="prompt-card-hover">
+    <article
+      className="prompt-card-hover animate-parallax-fade-up"
+      style={{ animationDelay: `${(index % 6) * 0.08}s` }}
+    >
       {/* 1. Upper Media Showcase (Motionsites Aspect-Ratio Media Wrap) */}
       <div className="card-media-wrap">
         <EditorialImage
