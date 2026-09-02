@@ -55,7 +55,7 @@ export function EditorialCTA() {
             }}
           >
             The world waits <br />
-            <span style={{ fontStyle: 'italic', color: 'var(--gold)' }}>
+            <span className="animate-gradient-shift" style={{ fontStyle: 'italic' }}>
               beyond the map.
             </span>
           </h2>

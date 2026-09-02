@@ -13,7 +13,9 @@ export function BentoShowcase() {
       {/* Section Header */}
       <div className="section-header centered">
         <span className="eyebrow">Intelligence Architecture</span>
-        <h2 className="section-title">Engineered for the Curious Mind</h2>
+        <h2 className="section-title">
+          Engineered for the <span className="animate-gradient-shift">Curious Mind</span>
+        </h2>
         <p className="section-subtitle">
           Merging classical travel journalism with algorithmic rigor. Four pillars that transform how you experience the world.
         </p>
@@ -29,24 +31,13 @@ export function BentoShowcase() {
       >
         {/* Card 1: Live Climate Telemetry (Span 7) */}
         <div
+          className="prompt-card-hover animate-parallax-fade-up"
           style={{
             gridColumn: 'span 7',
-            backgroundColor: 'var(--surface-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
             padding: 'var(--space-2xl)',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: 'var(--shadow-subtle)',
-            transition: 'border-color var(--transition-smooth), transform var(--transition-smooth)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-hover)';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            animationDelay: '0.1s'
           }}
         >
           {/* Subtle gold radial background glow */}
@@ -144,27 +135,16 @@ export function BentoShowcase() {
 
         {/* Card 2: Neural Travel Guide (Span 5) */}
         <div
+          className="prompt-card-hover animate-parallax-fade-up"
           style={{
             gridColumn: 'span 5',
-            backgroundColor: 'var(--surface-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
             padding: 'var(--space-2xl)',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: 'var(--shadow-subtle)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            transition: 'border-color var(--transition-smooth), transform var(--transition-smooth)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-hover)';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            animationDelay: '0.2s'
           }}
         >
           <div>
@@ -223,24 +203,13 @@ export function BentoShowcase() {
 
         {/* Card 3: Cartographic Routing (Span 5) */}
         <div
+          className="prompt-card-hover animate-parallax-fade-up"
           style={{
             gridColumn: 'span 5',
-            backgroundColor: 'var(--surface-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
             padding: 'var(--space-2xl)',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: 'var(--shadow-subtle)',
-            transition: 'border-color var(--transition-smooth), transform var(--transition-smooth)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-hover)';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            animationDelay: '0.3s'
           }}
         >
           <div
@@ -286,29 +255,18 @@ export function BentoShowcase() {
           </p>
         </div>
 
-        {/* Card 4: Parametric Day Architect (Span 7) */}
+        {/* Card 4: Curated Perspective Memoirs (Span 7) */}
         <div
+          className="prompt-card-hover animate-parallax-fade-up"
           style={{
             gridColumn: 'span 7',
-            backgroundColor: 'var(--surface-elevated)',
-            border: '1px solid var(--border)',
-            borderRadius: 'var(--radius-sm)',
             padding: 'var(--space-2xl)',
             position: 'relative',
             overflow: 'hidden',
-            boxShadow: 'var(--shadow-subtle)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
-            transition: 'border-color var(--transition-smooth), transform var(--transition-smooth)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border-hover)';
-            e.currentTarget.style.transform = 'translateY(-4px)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.borderColor = 'var(--border)';
-            e.currentTarget.style.transform = 'translateY(0)';
+            animationDelay: '0.4s'
           }}
         >
           <div>

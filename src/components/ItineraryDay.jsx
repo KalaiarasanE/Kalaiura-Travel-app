@@ -9,15 +9,12 @@ import { Icon } from './Icons';
 export function ItineraryDay({ day }) {
   return (
     <article
-      className="itinerary-day-card"
+      className="prompt-card-hover animate-parallax-fade-up"
       style={{
-        backgroundColor: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
-        borderRadius: 'var(--radius-xs)',
-        padding: 'var(--space-xl)',
+        padding: 'var(--space-2xl)',
         marginBottom: 'var(--space-xl)',
         position: 'relative',
-        boxShadow: 'var(--shadow-subtle)'
+        animationDelay: `${((day.dayNumber - 1) % 6) * 0.1}s`
       }}
     >
       {/* Day Identification & Theme */}

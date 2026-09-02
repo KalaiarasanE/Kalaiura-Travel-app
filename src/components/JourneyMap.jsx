@@ -41,7 +41,9 @@ export function JourneyMap() {
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
       <div className="section-header centered">
         <span className="eyebrow">Cartographic Trajectory</span>
-        <h2 className="section-title">The Grand Transcontinental Arc</h2>
+        <h2 className="section-title">
+          The Grand <span className="animate-gradient-shift">Transcontinental Arc</span>
+        </h2>
         <p className="section-subtitle">
           An atmospheric route visualizing movement across cultural hemispheres. Tap any waypoint to inspect regional telemetry and embark.
         </p>
@@ -49,12 +51,10 @@ export function JourneyMap() {
 
       {/* Visual Map Canvas Card */}
       <div
+        className="prompt-card-hover animate-parallax-fade-up"
         style={{
-          backgroundColor: 'var(--color-surface)',
-          border: '1px solid var(--color-border)',
           borderRadius: 'var(--radius-sm)',
           overflow: 'hidden',
-          boxShadow: 'var(--shadow-elevated)',
           position: 'relative'
         }}
       >

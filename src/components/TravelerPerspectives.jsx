@@ -12,7 +12,7 @@ export function TravelerPerspectives() {
       author: 'Evelyn St. Claire',
       role: 'Architectural Historian',
       location: 'Kyoto, Japan',
-      quote: 'AERORA’s dawn timing recommendation for Fushimi Inari Taisha allowed me to experience the vermilion torii tunnels in complete solitude as rain brushed the cedar needles.',
+      quote: 'KALAIURA’s dawn timing recommendation for Fushimi Inari Taisha allowed me to experience the vermilion torii tunnels in complete solitude as rain brushed the cedar needles.',
       destinationId: 'kyoto'
     },
     {
@@ -35,7 +35,9 @@ export function TravelerPerspectives() {
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
       <div className="section-header centered">
         <span className="eyebrow">Dispatches & Memoirs</span>
-        <h2 className="section-title">Traveler Perspectives</h2>
+        <h2 className="section-title">
+          Traveler <span className="animate-gradient-shift">Perspectives</span>
+        </h2>
         <p className="section-subtitle">
           Reflections from authors, photographers, and architects who navigate the earth with intentional stillness.
         </p>
@@ -51,26 +53,16 @@ export function TravelerPerspectives() {
         {reflections.map((ref, idx) => (
           <article
             key={idx}
+            className="prompt-card-hover animate-parallax-fade-up"
             style={{
-              backgroundColor: 'var(--surface-elevated)',
-              border: '1px solid var(--border)',
-              borderRadius: 'var(--radius-sm)',
               padding: 'var(--space-2xl)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              boxShadow: 'var(--shadow-subtle)',
+              animationDelay: `${idx * 0.15}s`,
+              cursor: 'default',
               position: 'relative',
-              overflow: 'hidden',
-              transition: 'border-color var(--transition-fast), transform var(--transition-fast)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border-hover)';
-              e.currentTarget.style.transform = 'translateY(-4px)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)';
-              e.currentTarget.style.transform = 'translateY(0)';
+              overflow: 'hidden'
             }}
           >
             {/* Top Quote Mark Icon */}
