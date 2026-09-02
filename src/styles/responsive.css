@@ -1,0 +1,173 @@
+/* ==============================================================================
+   AERORA — RESPONSIVE MEDIA QUERIES
+   Pure CSS responsive adaptations from 320px to 2560px+
+   ============================================================================== */
+
+@import './variables.css';
+
+/* Large Desktops / Ultra-wide */
+@media (min-width: 1440px) {
+  :root {
+    --container-max: 1440px;
+    --container-pad: 4rem;
+  }
+}
+
+/* Standard Desktops / Laptops (max 1280px) */
+@media (max-width: 1280px) {
+  .hero-headline {
+    font-size: clamp(3rem, 6.5vw, 5rem);
+  }
+}
+
+/* Tablets Landscape & Small Laptops (max 1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --nav-height: 72px;
+    --container-pad: 2rem;
+    --space-4xl: 4.5rem;
+    --space-3xl: 3.5rem;
+  }
+
+  /* Reflow Asymmetric Destination Grid to 2 columns */
+  .destination-editorial-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .destination-editorial-grid .card-featured {
+    grid-column: span 2 !important;
+    grid-row: span 1 !important;
+  }
+
+  /* Weather Detail Grid */
+  .telemetry-metrics-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+
+  /* Itinerary Builder Split */
+  .builder-split-layout {
+    grid-template-columns: 1fr !important;
+    gap: var(--space-xl) !important;
+  }
+
+  .builder-sidebar {
+    position: static !important;
+  }
+}
+
+/* Tablets Portrait & Large Handhelds (max 768px) */
+@media (max-width: 768px) {
+  :root {
+    --nav-height: 64px;
+    --container-pad: 1.25rem;
+    --space-4xl: 3.5rem;
+    --space-3xl: 2.5rem;
+    --space-2xl: 2rem;
+  }
+
+  /* Header & Navigation */
+  .nav-desktop-links {
+    display: none !important;
+  }
+
+  .nav-mobile-toggle {
+    display: inline-flex !important;
+  }
+
+  /* Full Screen Mobile Overlay Menu */
+  .mobile-menu-overlay {
+    display: flex !important;
+  }
+
+  /* Destination Explorer Single Column Grid */
+  .destination-editorial-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .destination-editorial-grid .card-featured,
+  .destination-editorial-grid .card-tall,
+  .destination-editorial-grid .card-wide {
+    grid-column: span 1 !important;
+    grid-row: span 1 !important;
+    min-height: 380px !important;
+  }
+
+  /* Horizontally Scrollable Filters */
+  .filter-bar-scrollable {
+    display: flex !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    padding-bottom: var(--space-xs) !important;
+    scrollbar-width: none !important;
+  }
+  .filter-bar-scrollable::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  /* Weather Telemetry on Tablet/Mobile */
+  .telemetry-metrics-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  /* AI Guide Chat Box */
+  .ai-guide-container {
+    height: 70vh !important;
+  }
+
+  /* Journey Drawer */
+  .drawer-panel {
+    max-width: 100% !important;
+  }
+
+  /* Hero Section Mobile Adjustments */
+  .hero-content {
+    padding-top: var(--space-3xl) !important;
+  }
+
+  .hero-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: var(--space-sm) !important;
+  }
+
+  .hero-actions .btn {
+    width: 100% !important;
+  }
+
+  .hero-weather-badge {
+    position: static !important;
+    margin-top: var(--space-lg) !important;
+    width: 100% !important;
+    justify-content: center !important;
+  }
+}
+
+/* Small Mobile Screens (max 480px & 320px) */
+@media (max-width: 480px) {
+  :root {
+    --container-pad: 1rem;
+    --text-hero: 2.75rem;
+  }
+
+  .section-title {
+    font-size: 1.85rem !important;
+  }
+
+  .telemetry-metrics-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: var(--text-xs);
+  }
+
+  /* Ensure touch targets meet 44px min height */
+  button, input, select, .pill-filter {
+    min-height: 44px;
+  }
+
+  .modal-card {
+    padding: var(--space-md) !important;
+  }
+}
