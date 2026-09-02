@@ -1,14 +1,18 @@
 /* ==============================================================================
-   AERORA — HOME PAGE EXPERIENCE
-   The flagship editorial showcase: Hero, Discovery, Route Map & Curated Places
+   AERORA — FLAGSHIP HOME PAGE (REFERENCE DESIGN UPGRADE)
+   Near-black atmosphere, champagne gold accents, editorial bento & telemetry
    ============================================================================== */
 
 import React from 'react';
 import { Hero } from '../components/Hero';
+import { StatsTicker } from '../components/StatsTicker';
 import { DestinationExplorer } from '../components/DestinationExplorer';
+import { BentoShowcase } from '../components/BentoShowcase';
 import { JourneyMap } from '../components/JourneyMap';
 import { FamousPlaces } from '../components/FamousPlaces';
 import { AIGuide } from '../components/AIGuide';
+import { TravelerPerspectives } from '../components/TravelerPerspectives';
+import { EditorialCTA } from '../components/EditorialCTA';
 import { PLACES } from '../data/places';
 
 export function Home() {
@@ -24,18 +28,24 @@ export function Home() {
 
   return (
     <main>
-      {/* 1. Cinematic Full-Screen Hero */}
+      {/* 1. Full-Screen Cinematic Video Hero with Gold Glow */}
       <Hero onExploreClick={scrollToExplorer} />
 
-      {/* 2. Asymmetric Destination Explorer */}
+      {/* 2. Sleek Telemetry & Stats Ticker Strip */}
+      <StatsTicker />
+
+      {/* 3. Asymmetric Destination Explorer */}
       <div style={{ paddingTop: 'var(--space-4xl)' }}>
         <DestinationExplorer id="destinations-explorer" />
       </div>
 
-      {/* 3. Stylized Journey Route Map */}
+      {/* 4. Intelligence Bento Grid Showcase */}
+      <BentoShowcase />
+
+      {/* 5. Stylized Transcontinental Journey Route Map */}
       <JourneyMap />
 
-      {/* 4. Curated Landmark Monuments Showcase */}
+      {/* 6. Curated Landmark Monuments Showcase */}
       <div className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
         <FamousPlaces
           places={featuredPlaces}
@@ -43,7 +53,7 @@ export function Home() {
         />
       </div>
 
-      {/* 5. AERORA Guide Section */}
+      {/* 7. Conversational AI Guide Section */}
       <section className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
         <div className="section-header centered">
           <span className="eyebrow">Intelligent Consultation</span>
@@ -57,6 +67,12 @@ export function Home() {
           <AIGuide initialDestinationId="kyoto" />
         </div>
       </section>
+
+      {/* 8. Traveler Perspectives & Memoirs */}
+      <TravelerPerspectives />
+
+      {/* 9. Editorial Pre-Footer Call to Action */}
+      <EditorialCTA />
     </main>
   );
 }

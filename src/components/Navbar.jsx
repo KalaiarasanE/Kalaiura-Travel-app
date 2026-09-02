@@ -1,6 +1,6 @@
 /* ==============================================================================
-   AERORA — EDITORIAL NAVBAR
-   Sticky header with telemetry chips, journey counter, and full-screen mobile menu
+   AERORA — EDITORIAL NAVBAR (REFERENCE REDESIGN)
+   Transparent/near-black header, uppercase navigation, gold active indicators
    ============================================================================== */
 
 import React, { useState, useEffect } from 'react';
@@ -19,18 +19,18 @@ export function Navbar() {
   // Handle scroll backdrop effect
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 40);
+      setIsScrolled(window.scrollY > 30);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navLinks = [
-    { label: 'Discover', path: '/' },
-    { label: 'Destinations', path: '/destinations' },
-    { label: 'Places', path: '/places' },
-    { label: 'Trip Planner', path: '/planner' },
-    { label: 'AI Guide', path: '/guide' }
+    { label: 'DISCOVER', path: '/' },
+    { label: 'DESTINATIONS', path: '/destinations' },
+    { label: 'PLACES', path: '/places' },
+    { label: 'TRIP PLANNER', path: '/planner' },
+    { label: 'AI GUIDE', path: '/guide' }
   ];
 
   return (
@@ -44,10 +44,10 @@ export function Navbar() {
           right: 0,
           zIndex: 'var(--z-header)',
           transition: 'background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease',
-          background: isScrolled ? 'rgba(9, 10, 14, 0.88)' : 'linear-gradient(180deg, rgba(9, 10, 14, 0.7) 0%, transparent 100%)',
+          background: isScrolled ? 'rgba(8, 9, 12, 0.92)' : 'linear-gradient(180deg, rgba(8, 9, 12, 0.75) 0%, transparent 100%)',
           backdropFilter: isScrolled ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
-          borderBottom: isScrolled ? '1px solid var(--color-border)' : '1px solid transparent'
+          borderBottom: isScrolled ? '1px solid var(--border)' : '1px solid transparent'
         }}
       >
         <div
@@ -60,14 +60,16 @@ export function Navbar() {
             gap: 'var(--space-md)'
           }}
         >
-          {/* AERORA Brand Wordmark */}
+          {/* AERORA Brand Wordmark (Clean & Transparent) */}
           <Link
             to="/"
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'flex-start',
-              textDecoration: 'none'
+              textDecoration: 'none',
+              background: 'transparent',
+              padding: 0
             }}
             aria-label="AERORA Home"
           >
@@ -77,7 +79,7 @@ export function Navbar() {
                 fontSize: '1.45rem',
                 fontWeight: '600',
                 letterSpacing: '0.24em',
-                color: 'var(--color-text-primary)',
+                color: 'var(--text-primary)',
                 lineHeight: 1
               }}
             >
@@ -89,7 +91,7 @@ export function Navbar() {
                 fontFamily: 'var(--font-body)',
                 letterSpacing: '0.28em',
                 textTransform: 'uppercase',
-                color: 'var(--color-accent)',
+                color: 'var(--gold)',
                 marginTop: '4px',
                 fontWeight: '500'
               }}
@@ -115,15 +117,21 @@ export function Navbar() {
                   key={link.path}
                   to={link.path}
                   style={{
-                    fontSize: 'var(--text-sm)',
+                    fontSize: '0.8rem',
                     fontFamily: 'var(--font-body)',
-                    letterSpacing: 'var(--ls-wide)',
+                    letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--color-accent)' : 'var(--color-text-secondary)',
+                    color: isActive ? 'var(--gold)' : 'var(--text-secondary)',
                     fontWeight: isActive ? '600' : '400',
                     transition: 'color var(--transition-fast)',
                     position: 'relative',
-                    padding: '0.25rem 0'
+                    padding: '0.35rem 0'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) e.currentTarget.style.color = 'var(--text-primary)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)';
                   }}
                 >
                   {link.label}
@@ -135,8 +143,9 @@ export function Navbar() {
                         left: 0,
                         right: 0,
                         height: '2px',
-                        backgroundColor: 'var(--color-accent)',
-                        borderRadius: '1px'
+                        backgroundColor: 'var(--gold)',
+                        borderRadius: '1px',
+                        boxShadow: '0 0 10px rgba(224, 162, 77, 0.6)'
                       }}
                     />
                   )}
@@ -157,29 +166,32 @@ export function Navbar() {
             <button
               onClick={openLocationSelector}
               className="btn-ghost"
-              title="Change your origin location"
+              title="Change your departure coordinates"
               aria-label={`Current location: ${currentLocation.name}. Click to change.`}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.45rem',
-                padding: '0.45rem 0.85rem',
-                border: '1px solid var(--color-border)',
+                gap: '0.5rem',
+                padding: '0.45rem 0.95rem',
+                border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-full)',
                 fontSize: 'var(--text-xs)',
-                letterSpacing: '0.04em',
-                color: 'var(--color-text-secondary)',
-                backgroundColor: 'rgba(255, 255, 255, 0.03)'
+                letterSpacing: '0.05em',
+                color: 'var(--text-secondary)',
+                backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                transition: 'border-color var(--transition-fast)'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--border-hover)')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
-              <Icon name="map-pin" size={13} style={{ color: 'var(--color-accent)' }} />
-              <span style={{ color: 'var(--color-text-primary)', fontWeight: '500' }}>
+              <Icon name="map-pin" size={13} style={{ color: 'var(--gold)' }} />
+              <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>
                 {currentLocation.name}
               </span>
               {weather && (
                 <>
                   <span style={{ opacity: 0.35 }}>·</span>
-                  <span style={{ color: 'var(--color-accent-light)' }}>
+                  <span style={{ color: 'var(--gold)' }}>
                     {weather.temp}°C
                   </span>
                 </>
@@ -195,24 +207,28 @@ export function Navbar() {
                 position: 'relative',
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '0.45rem',
-                padding: '0.45rem 0.95rem',
-                border: '1px solid var(--color-border)',
+                gap: '0.5rem',
+                padding: '0.45rem 1rem',
+                border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-full)',
                 fontSize: 'var(--text-xs)',
                 letterSpacing: 'var(--ls-wide)',
                 textTransform: 'uppercase',
-                color: totalPlaces > 0 ? 'var(--color-accent-light)' : 'var(--color-text-secondary)',
-                backgroundColor: totalPlaces > 0 ? 'var(--color-accent-dim)' : 'rgba(255, 255, 255, 0.03)'
+                color: totalPlaces > 0 ? 'var(--text-primary)' : 'var(--text-secondary)',
+                backgroundColor: totalPlaces > 0 ? 'rgba(224, 162, 77, 0.1)' : 'rgba(255, 255, 255, 0.02)',
+                borderColor: totalPlaces > 0 ? 'rgba(224, 162, 77, 0.4)' : 'var(--border)',
+                transition: 'all var(--transition-fast)'
               }}
+              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--border-hover)')}
+              onMouseLeave={(e) => (e.currentTarget.style.borderColor = totalPlaces > 0 ? 'rgba(224, 162, 77, 0.4)' : 'var(--border)')}
             >
-              <Icon name="bookmark" size={14} style={{ color: totalPlaces > 0 ? 'var(--color-accent)' : 'inherit' }} />
+              <Icon name="bookmark" size={14} style={{ color: totalPlaces > 0 ? 'var(--gold)' : 'inherit' }} />
               <span style={{ fontWeight: '500' }}>Journey</span>
               {totalPlaces > 0 && (
                 <span
                   style={{
-                    backgroundColor: 'var(--color-accent)',
-                    color: '#090a0e',
+                    backgroundColor: 'var(--gold)',
+                    color: '#08090C',
                     fontSize: '0.68rem',
                     fontWeight: '700',
                     width: '18px',
@@ -222,7 +238,7 @@ export function Navbar() {
                     alignItems: 'center',
                     justifyContent: 'center',
                     marginLeft: '2px',
-                    animation: 'journey-bounce 0.4s ease'
+                    boxShadow: '0 0 10px rgba(224, 162, 77, 0.5)'
                   }}
                 >
                   {totalPlaces}
@@ -238,7 +254,7 @@ export function Navbar() {
               aria-expanded={isMobileMenuOpen}
               style={{
                 display: 'none',
-                color: 'var(--color-text-primary)'
+                color: 'var(--text-primary)'
               }}
             >
               <Icon name={isMobileMenuOpen ? 'close' : 'menu'} size={22} />
@@ -247,44 +263,88 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Full-Screen Mobile Navigation Overlay */}
+      {/* Full-Screen Mobile Navigation Overlay (Clean & Transparent Logo) */}
       {isMobileMenuOpen && (
         <div
           className="mobile-menu-overlay"
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 'calc(var(--z-header) - 1)',
-            backgroundColor: 'rgba(9, 10, 14, 0.98)',
+            zIndex: 'calc(var(--z-header) + 10)',
+            backgroundColor: 'rgba(8, 9, 12, 0.98)',
             backdropFilter: 'blur(24px)',
             WebkitBackdropFilter: 'blur(24px)',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'center',
-            alignItems: 'center',
-            padding: 'var(--space-2xl)',
-            gap: 'var(--space-xl)',
+            justifyContent: 'space-between',
+            padding: 'var(--space-2xl) var(--space-xl)',
             animation: 'modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
-          <span
+          {/* Top Bar with Clean Transparent Logo & Close Button */}
+          <div
             style={{
-              fontFamily: 'var(--font-accent)',
-              fontSize: 'var(--text-xs)',
-              letterSpacing: '0.24em',
-              textTransform: 'uppercase',
-              color: 'var(--color-accent)'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              width: '100%'
             }}
           >
-            Navigation
-          </span>
+            <Link
+              to="/"
+              onClick={() => setIsMobileMenuOpen(false)}
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'flex-start',
+                textDecoration: 'none',
+                background: 'transparent',
+                padding: 0
+              }}
+            >
+              <span
+                style={{
+                  fontFamily: 'var(--font-accent)',
+                  fontSize: '1.45rem',
+                  fontWeight: '600',
+                  letterSpacing: '0.24em',
+                  color: 'var(--text-primary)',
+                  lineHeight: 1
+                }}
+              >
+                AERORA
+              </span>
+              <span
+                style={{
+                  fontSize: '0.62rem',
+                  fontFamily: 'var(--font-body)',
+                  letterSpacing: '0.28em',
+                  textTransform: 'uppercase',
+                  color: 'var(--gold)',
+                  marginTop: '4px'
+                }}
+              >
+                Travel Beyond the Map
+              </span>
+            </Link>
 
+            <button
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="btn-icon"
+              aria-label="Close mobile navigation"
+            >
+              <Icon name="close" size={20} />
+            </button>
+          </div>
+
+          {/* Nav Links Stack */}
           <nav
             style={{
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 'var(--space-lg)'
+              gap: 'var(--space-lg)',
+              margin: 'auto 0'
             }}
           >
             {navLinks.map((link) => {
@@ -298,8 +358,9 @@ export function Navbar() {
                     fontFamily: 'var(--font-display)',
                     fontSize: '2rem',
                     fontWeight: '300',
-                    letterSpacing: '0.04em',
-                    color: isActive ? 'var(--color-accent)' : 'var(--color-text-primary)',
+                    letterSpacing: '0.06em',
+                    textTransform: 'uppercase',
+                    color: isActive ? 'var(--gold)' : 'var(--text-primary)',
                     textDecoration: 'none',
                     transition: 'color var(--transition-fast)'
                   }}
@@ -310,13 +371,14 @@ export function Navbar() {
             })}
           </nav>
 
+          {/* Bottom Actions */}
           <div
             style={{
-              marginTop: 'var(--space-xl)',
               display: 'flex',
               flexDirection: 'column',
               alignItems: 'center',
-              gap: 'var(--space-md)'
+              gap: 'var(--space-md)',
+              width: '100%'
             }}
           >
             <button
@@ -325,9 +387,9 @@ export function Navbar() {
                 openLocationSelector();
               }}
               className="btn btn-secondary btn-sm"
-              style={{ width: '220px' }}
+              style={{ width: '100%', maxWidth: '280px' }}
             >
-              <Icon name="map-pin" size={14} />
+              <Icon name="map-pin" size={14} style={{ color: 'var(--gold)' }} />
               <span>Location: {currentLocation.name}</span>
             </button>
 
@@ -337,7 +399,7 @@ export function Navbar() {
                 toggleDrawer();
               }}
               className="btn btn-primary btn-sm"
-              style={{ width: '220px' }}
+              style={{ width: '100%', maxWidth: '280px' }}
             >
               <Icon name="bookmark" size={14} />
               <span>Personal Journey ({totalPlaces})</span>

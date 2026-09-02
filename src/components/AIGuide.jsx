@@ -1,13 +1,15 @@
 /* ==============================================================================
    AERORA — AI TRAVEL GUIDE ("AERORA GUIDE")
-   Conversational travel assistant with contextual destination intelligence
+   Conversational travel assistant with contextual destination intelligence & landmark cards
    ============================================================================== */
 
 import React, { useState, useRef, useEffect } from 'react';
 import { DESTINATIONS } from '../data/destinations';
+import { PLACES } from '../data/places';
 import { askAIGuide } from '../services/ai';
 import { ChatMessage } from './ChatMessage';
 import { Icon } from './Icons';
+import { useJourneyContext } from '../context/JourneyContext';
 
 const SUGGESTED_QUESTIONS = [
   'How many days should I spend here?',
@@ -28,8 +30,10 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState(null);
+  const { addPlace, hasPlace } = useJourneyContext();
 
   const selectedDestination = DESTINATIONS.find((d) => d.id === selectedDestId) || DESTINATIONS[0];
+  const destinationLandmarks = PLACES.filter((p) => p.destinationId === selectedDestination.id);
 
   const [messages, setMessages] = useState(() => [
     {
@@ -126,18 +130,16 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
     setErrorMessage(null);
   };
 
-
-
   return (
     <div
       className="ai-guide-container"
       style={{
-        backgroundColor: 'var(--color-surface)',
-        border: '1px solid var(--color-border)',
+        backgroundColor: 'var(--surface-elevated)',
+        border: '1px solid var(--border)',
         borderRadius: 'var(--radius-sm)',
         display: 'flex',
         flexDirection: 'column',
-        height: '640px',
+        height: '680px',
         overflow: 'hidden',
         boxShadow: 'var(--shadow-elevated)'
       }}
@@ -146,8 +148,8 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
       <div
         style={{
           padding: 'var(--space-md) var(--space-lg)',
-          borderBottom: '1px solid var(--color-border)',
-          backgroundColor: 'rgba(9, 10, 14, 0.65)',
+          borderBottom: '1px solid var(--border)',
+          backgroundColor: 'rgba(8, 9, 12, 0.75)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -156,21 +158,22 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         }}
       >
         <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
-            <Icon name="sparkles" size={16} style={{ color: 'var(--color-accent)' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <Icon name="sparkles" size={16} style={{ color: 'var(--gold)' }} />
             <h3
               style={{
                 fontFamily: 'var(--font-accent)',
                 fontSize: '1.25rem',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
-                fontWeight: '600'
+                fontWeight: '600',
+                color: 'var(--text-primary)'
               }}
             >
               AERORA Guide
             </h3>
           </div>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-tertiary)' }}>
+          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
             Ask the place anything.
           </p>
         </div>
@@ -208,12 +211,12 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         </div>
       </div>
 
-      {/* Suggested Questions Fast Strip */}
+      {/* Suggested Questions Strip */}
       <div
         style={{
           padding: '0.65rem var(--space-lg)',
           backgroundColor: 'rgba(255, 255, 255, 0.02)',
-          borderBottom: '1px solid var(--color-border)',
+          borderBottom: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
           gap: 'var(--space-xs)',
@@ -221,7 +224,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           whiteSpace: 'nowrap'
         }}
       >
-        <span style={{ fontSize: '0.7rem', color: 'var(--color-accent)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+        <span style={{ fontSize: '0.68rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600' }}>
           Suggested:
         </span>
         {SUGGESTED_QUESTIONS.map((q) => (
@@ -232,20 +235,20 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
             style={{
               padding: '0.3rem 0.75rem',
               borderRadius: 'var(--radius-full)',
-              backgroundColor: 'rgba(255, 255, 255, 0.04)',
-              border: '1px solid var(--color-border)',
-              color: 'var(--color-text-secondary)',
+              backgroundColor: 'rgba(255, 255, 255, 0.03)',
+              border: '1px solid var(--border)',
+              color: 'var(--text-secondary)',
               fontSize: 'var(--text-xs)',
               cursor: 'pointer',
               transition: 'all var(--transition-fast)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-accent)';
-              e.currentTarget.style.color = 'var(--color-text-primary)';
+              e.currentTarget.style.borderColor = 'var(--gold)';
+              e.currentTarget.style.color = 'var(--text-primary)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-border)';
-              e.currentTarget.style.color = 'var(--color-text-secondary)';
+              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.color = 'var(--text-secondary)';
             }}
           >
             {q}
@@ -269,20 +272,20 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
 
         {/* Typing Indicator */}
         {isLoading && (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-xs)', marginBottom: 'var(--space-md)' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-sm)', marginBottom: 'var(--space-md)' }}>
             <div
               style={{
-                width: '28px',
-                height: '28px',
+                width: '30px',
+                height: '30px',
                 borderRadius: '50%',
-                backgroundColor: 'var(--color-accent-dim)',
-                border: '1px solid var(--color-accent-border)',
+                backgroundColor: 'rgba(224, 162, 77, 0.12)',
+                border: '1px solid rgba(224, 162, 77, 0.35)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
                 fontSize: '0.68rem',
                 fontFamily: 'var(--font-accent)',
-                color: 'var(--color-accent)'
+                color: 'var(--gold)'
               }}
             >
               AE
@@ -314,6 +317,50 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         <div ref={messagesEndRef} />
       </div>
 
+      {/* Destination Landmark Recommendations Quick-Drawer */}
+      {destinationLandmarks.length > 0 && (
+        <div
+          style={{
+            padding: '0.65rem var(--space-lg)',
+            backgroundColor: 'rgba(8, 9, 12, 0.85)',
+            borderTop: '1px solid var(--border)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'var(--space-sm)',
+            overflowX: 'auto',
+            whiteSpace: 'nowrap'
+          }}
+        >
+          <span style={{ fontSize: '0.68rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
+            Curated Places:
+          </span>
+          {destinationLandmarks.map((place) => {
+            const isAdded = hasPlace(place.id);
+            return (
+              <button
+                key={place.id}
+                onClick={() => addPlace(place)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                  padding: '0.3rem 0.65rem',
+                  borderRadius: 'var(--radius-xs)',
+                  backgroundColor: isAdded ? 'rgba(224, 162, 77, 0.15)' : 'rgba(255, 255, 255, 0.04)',
+                  border: isAdded ? '1px solid var(--gold)' : '1px solid var(--border)',
+                  color: isAdded ? 'var(--gold)' : 'var(--text-secondary)',
+                  fontSize: 'var(--text-xs)',
+                  cursor: 'pointer'
+                }}
+              >
+                <Icon name={isAdded ? 'check' : 'plus'} size={12} />
+                <span>{place.name}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+
       {/* Input Form Bar */}
       <form
         onSubmit={(e) => {
@@ -322,8 +369,8 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         }}
         style={{
           padding: 'var(--space-md) var(--space-lg)',
-          borderTop: '1px solid var(--color-border)',
-          backgroundColor: 'rgba(9, 10, 14, 0.7)',
+          borderTop: '1px solid var(--border)',
+          backgroundColor: 'rgba(8, 9, 12, 0.9)',
           display: 'flex',
           alignItems: 'center',
           gap: 'var(--space-xs)'

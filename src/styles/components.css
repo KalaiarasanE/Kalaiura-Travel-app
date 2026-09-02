@@ -1,6 +1,6 @@
 /* ==============================================================================
    AERORA — COMPONENT DESIGN SYSTEM
-   Bespoke UI components built from scratch with pure CSS
+   Editorial luxury travel aesthetic inspired by reference design language
    ============================================================================== */
 
 @import './variables.css';
@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 0.85rem 1.75rem;
+  padding: 0.85rem 1.85rem;
   font-family: var(--font-body);
   font-size: var(--text-sm);
   font-weight: var(--fw-medium);
@@ -37,52 +37,61 @@
   pointer-events: none;
 }
 
-/* Primary Accent Button */
+/* Primary Gold Accent Button */
 .btn-primary {
-  background-color: var(--color-accent);
-  color: #090a0e;
-  border: 1px solid var(--color-accent);
+  background-color: var(--gold);
+  color: #08090C;
+  border: 1px solid var(--gold);
   font-weight: var(--fw-semibold);
-  box-shadow: 0 4px 18px rgba(217, 155, 79, 0.22);
+  box-shadow: 0 4px 22px rgba(224, 162, 77, 0.28);
 }
 
 .btn-primary:hover {
   background-color: var(--color-accent-light);
   border-color: var(--color-accent-light);
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(217, 155, 79, 0.35);
+  box-shadow: 0 8px 32px rgba(224, 162, 77, 0.45);
+}
+
+.btn-primary svg {
+  transition: transform var(--transition-fast);
+}
+
+.btn-primary:hover svg {
+  transform: translateX(3px);
 }
 
 /* Secondary Editorial Ghost/Outline Button */
 .btn-secondary {
-  background-color: rgba(255, 255, 255, 0.04);
-  color: var(--color-text-primary);
-  border: 1px solid var(--color-border);
+  background-color: rgba(255, 255, 255, 0.02);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
 }
 
 .btn-secondary:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-  border-color: var(--color-text-primary);
-  color: #ffffff;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-color: var(--border-hover);
+  color: var(--text-primary);
   transform: translateY(-2px);
+  box-shadow: 0 0 24px rgba(224, 162, 77, 0.16);
 }
 
 /* Minimal Understated Ghost Button */
 .btn-ghost {
   background: transparent;
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   border: 1px solid transparent;
   padding: 0.65rem 1.25rem;
 }
 
 .btn-ghost:hover {
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   background: rgba(255, 255, 255, 0.04);
 }
 
-/* Small / Icon Button Variations */
+/* Small / Large / Icon Button Variations */
 .btn-sm {
   padding: 0.55rem 1rem;
   font-size: var(--text-xs);
@@ -99,16 +108,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  color: var(--color-text-secondary);
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid var(--color-border);
+  color: var(--text-secondary);
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border);
   transition: all var(--transition-fast);
 }
 
 .btn-icon:hover {
-  color: var(--color-text-primary);
-  border-color: var(--color-accent);
-  background: rgba(217, 155, 79, 0.1);
+  color: var(--text-primary);
+  border-color: var(--border-hover);
+  background: rgba(224, 162, 77, 0.12);
   transform: scale(1.05);
 }
 
@@ -126,15 +135,15 @@
   border-radius: var(--radius-xs);
   text-transform: uppercase;
   font-weight: var(--fw-medium);
-  background: rgba(255, 255, 255, 0.05);
-  color: var(--color-text-secondary);
-  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
 }
 
 .badge-accent {
-  background: var(--color-accent-dim);
-  color: var(--color-accent-light);
-  border-color: var(--color-accent-border);
+  background: rgba(224, 162, 77, 0.1);
+  color: var(--gold);
+  border-color: rgba(224, 162, 77, 0.3);
 }
 
 .pill-filter {
@@ -143,24 +152,25 @@
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
   border-radius: var(--radius-full);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
   background: rgba(255, 255, 255, 0.02);
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   transition: all var(--transition-fast);
   white-space: nowrap;
 }
 
 .pill-filter:hover {
-  border-color: rgba(245, 242, 235, 0.25);
-  color: var(--color-text-primary);
-  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(224, 162, 77, 0.4);
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .pill-filter.active {
-  background: var(--color-text-primary);
-  color: var(--color-bg);
-  border-color: var(--color-text-primary);
+  background: var(--gold);
+  color: #08090C;
+  border-color: var(--gold);
   font-weight: var(--fw-semibold);
+  box-shadow: 0 2px 14px rgba(224, 162, 77, 0.35);
 }
 
 /* -----------------------------------------------------------------------------
@@ -168,38 +178,38 @@
    ----------------------------------------------------------------------------- */
 .input-field {
   width: 100%;
-  background: rgba(19, 22, 30, 0.65);
-  border: 1px solid var(--color-border);
+  background: rgba(13, 15, 19, 0.75);
+  border: 1px solid var(--border);
   border-radius: var(--radius-xs);
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   padding: 0.95rem 1.25rem;
   font-family: var(--font-body);
   font-size: var(--text-base);
-  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast), box-shadow var(--transition-fast);
 }
 
 .input-field:focus {
   outline: none;
-  border-color: var(--color-accent);
-  background: rgba(25, 29, 39, 0.85);
-  box-shadow: 0 0 0 1px var(--color-accent);
+  border-color: var(--gold);
+  background: rgba(17, 19, 24, 0.95);
+  box-shadow: 0 0 0 1px var(--gold), 0 0 18px rgba(224, 162, 77, 0.15);
 }
 
 .input-field::placeholder {
-  color: var(--color-text-muted);
+  color: var(--text-muted);
 }
 
 select.input-field {
   appearance: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23a4a8b2' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23A7A8AF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   padding-right: 2.5rem;
 }
 
 select.input-field option {
-  background: var(--color-surface);
-  color: var(--color-text-primary);
+  background: var(--surface);
+  color: var(--text-primary);
 }
 
 /* -----------------------------------------------------------------------------
@@ -208,9 +218,9 @@ select.input-field option {
 .skeleton {
   background: linear-gradient(
     90deg,
-    rgba(255, 255, 255, 0.03) 25%,
-    rgba(255, 255, 255, 0.08) 37%,
-    rgba(255, 255, 255, 0.03) 63%
+    rgba(255, 255, 255, 0.02) 25%,
+    rgba(255, 255, 255, 0.07) 37%,
+    rgba(255, 255, 255, 0.02) 63%
   );
   background-size: 400% 100%;
   animation: skeleton-shimmer 1.8s ease-in-out infinite;
@@ -229,7 +239,7 @@ select.input-field option {
 .image-loader-wrap {
   position: relative;
   overflow: hidden;
-  background: #11131a;
+  background: #0d0f13;
 }
 
 .image-loader-wrap img {
@@ -248,8 +258,8 @@ select.input-field option {
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #13161e 0%, #0d0f15 100%);
-  color: var(--color-text-tertiary);
+  background: linear-gradient(135deg, #111318 0%, #08090c 100%);
+  color: var(--text-muted);
   font-size: var(--text-xs);
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
@@ -261,9 +271,9 @@ select.input-field option {
 .modal-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(9, 10, 14, 0.82);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(8, 9, 12, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: var(--z-modal-backdrop);
   display: flex;
   align-items: center;
@@ -273,8 +283,8 @@ select.input-field option {
 }
 
 .modal-card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: var(--surface);
+  border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   max-width: 540px;
   width: 100%;
@@ -300,9 +310,9 @@ select.input-field option {
 .drawer-backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(9, 10, 14, 0.7);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
+  background: rgba(8, 9, 12, 0.75);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   z-index: var(--z-drawer);
   animation: modal-fade-in 0.25s ease-out;
 }
@@ -314,8 +324,8 @@ select.input-field option {
   bottom: 0;
   width: 100%;
   max-width: 460px;
-  background: var(--color-surface);
-  border-left: 1px solid var(--color-border);
+  background: var(--surface);
+  border-left: 1px solid var(--border);
   z-index: calc(var(--z-drawer) + 1);
   box-shadow: var(--shadow-overlay);
   display: flex;
@@ -336,17 +346,17 @@ select.input-field option {
   text-align: center;
   max-width: 580px;
   margin: var(--space-xl) auto;
-  border: 1px dashed var(--color-border);
+  border: 1px dashed var(--border);
   border-radius: var(--radius-xs);
-  background: rgba(19, 22, 30, 0.35);
+  background: rgba(13, 15, 19, 0.45);
 }
 
 .empty-state-icon, .error-state-icon {
   width: 48px;
   height: 48px;
   margin: 0 auto var(--space-md);
-  color: var(--color-accent);
-  opacity: 0.85;
+  color: var(--gold);
+  opacity: 0.9;
 }
 
 .empty-state-title, .error-state-title {
@@ -355,12 +365,12 @@ select.input-field option {
   font-weight: var(--fw-light);
   letter-spacing: var(--ls-wide);
   text-transform: uppercase;
-  color: var(--color-text-primary);
+  color: var(--text-primary);
   margin-bottom: var(--space-xs);
 }
 
 .empty-state-desc, .error-state-desc {
-  color: var(--color-text-secondary);
+  color: var(--text-secondary);
   font-size: var(--text-sm);
   margin-bottom: var(--space-lg);
   line-height: var(--lh-relaxed);
@@ -374,16 +384,16 @@ select.input-field option {
   align-items: center;
   gap: 5px;
   padding: 0.6rem 0.9rem;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.03);
   border-radius: var(--radius-xs);
-  border: 1px solid var(--color-border);
+  border: 1px solid var(--border);
 }
 
 .typing-dot {
   width: 5px;
   height: 5px;
   border-radius: 50%;
-  background-color: var(--color-accent);
+  background-color: var(--gold);
   opacity: 0.4;
   animation: typing-blink 1.4s infinite ease-in-out;
 }

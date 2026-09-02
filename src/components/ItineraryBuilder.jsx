@@ -1,9 +1,9 @@
 /* ==============================================================================
-   AERORA — AI ITINERARY BUILDER ("BUILD MY JOURNEY")
-   Structured parametric voyage synthesizer with day-by-day editorial timelines
+   AERORA — AI ITINERARY BUILDER & INTELLIGENT TRAVEL WORKSPACE
+   Parametric voyage synthesizer with expense estimates, weather telemetry & structured days
    ============================================================================== */
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { DESTINATIONS, TRAVEL_STYLES, BUDGET_LEVELS } from '../data/destinations';
 import { generateStructuredItinerary } from '../services/ai';
 import { ItineraryDay } from './ItineraryDay';
@@ -26,6 +26,11 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
 
   const [destinationId, setDestinationId] = useState(initialDestinationId);
   const [durationDays, setDurationDays] = useState(5);
+  const [startDate, setStartDate] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 14);
+    return d.toISOString().split('T')[0];
+  });
   const [travelStyle, setTravelStyle] = useState('Culture');
   const [budget, setBudget] = useState('Premium');
   const [pace, setPace] = useState('Balanced');
@@ -36,6 +41,21 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
   const [isSavedFeedback, setIsSavedFeedback] = useState(false);
 
   const selectedDestination = DESTINATIONS.find((d) => d.id === destinationId) || DESTINATIONS[0];
+
+  // Dynamic estimated expenses calculation based on budget and duration
+  const estimatedExpenses = useMemo(() => {
+    const dailyBase = budget === 'Ultra-Luxury' ? 650 : budget === 'Premium' ? 320 : 160;
+    const lodging = dailyBase * durationDays * 0.55;
+    const culinary = dailyBase * durationDays * 0.25;
+    const cultural = dailyBase * durationDays * 0.2;
+    const total = lodging + culinary + cultural;
+    return {
+      lodging: Math.round(lodging),
+      culinary: Math.round(culinary),
+      cultural: Math.round(cultural),
+      total: Math.round(total)
+    };
+  }, [budget, durationDays]);
 
   const toggleInterest = (interest) => {
     setSelectedInterests((prev) =>
@@ -78,22 +98,22 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
 
   return (
     <div className="itinerary-builder-wrapper" style={{ padding: 'var(--space-2xl) 0' }}>
-      {/* Editorial Split Layout */}
+      {/* Editorial Workspace Split Layout */}
       <div
         className="builder-split-layout"
         style={{
           display: 'grid',
-          gridTemplateColumns: '380px 1fr',
+          gridTemplateColumns: '400px 1fr',
           gap: 'var(--space-2xl)',
           alignItems: 'start'
         }}
       >
-        {/* Controls Sidebar */}
+        {/* Controls Workspace Dashboard */}
         <aside
           className="builder-sidebar"
           style={{
-            backgroundColor: 'var(--color-surface)',
-            border: '1px solid var(--color-border)',
+            backgroundColor: 'var(--surface-elevated)',
+            border: '1px solid var(--border)',
             borderRadius: 'var(--radius-sm)',
             padding: 'var(--space-xl)',
             boxShadow: 'var(--shadow-subtle)',
@@ -102,7 +122,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
           }}
         >
           <div style={{ marginBottom: 'var(--space-lg)' }}>
-            <span className="eyebrow">Voyage Architect</span>
+            <span className="eyebrow">Workspace Architect</span>
             <h3
               style={{
                 fontFamily: 'var(--font-accent)',
@@ -114,8 +134,8 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
             >
               Build My Journey
             </h3>
-            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)', marginTop: '4px' }}>
-              Configure your expedition parameters for an AI-synthesized, day-by-day editorial itinerary.
+            <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', marginTop: '4px' }}>
+              Configure expedition parameters for an AI-synthesized, day-by-day editorial itinerary.
             </p>
           </div>
 
@@ -126,7 +146,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
             }}
             style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-md)' }}
           >
-            {/* Destination */}
+            {/* Destination Selection */}
             <div>
               <label
                 style={{
@@ -134,7 +154,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   fontSize: 'var(--text-xs)',
                   letterSpacing: 'var(--ls-wider)',
                   textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
+                  color: 'var(--text-muted)',
                   marginBottom: '6px'
                 }}
               >
@@ -153,6 +173,51 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
               </select>
             </div>
 
+            {/* Destination Weather Snapshot */}
+            <div
+              style={{
+                backgroundColor: 'rgba(8, 9, 12, 0.65)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-xs)',
+                padding: '0.65rem 0.95rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: 'var(--text-xs)'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                <Icon name="sun" size={14} style={{ color: 'var(--gold)' }} />
+                <span style={{ color: 'var(--text-secondary)' }}>Season Telemetry:</span>
+              </div>
+              <span style={{ color: 'var(--gold)', fontWeight: '500' }}>
+                {selectedDestination.defaultWeather.temp}°C · {selectedDestination.defaultWeather.condition}
+              </span>
+            </div>
+
+            {/* Departure Date */}
+            <div>
+              <label
+                style={{
+                  display: 'block',
+                  fontSize: 'var(--text-xs)',
+                  letterSpacing: 'var(--ls-wider)',
+                  textTransform: 'uppercase',
+                  color: 'var(--text-muted)',
+                  marginBottom: '6px'
+                }}
+              >
+                Target Departure Date
+              </label>
+              <input
+                type="date"
+                className="input-field"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                style={{ fontSize: 'var(--text-sm)' }}
+              />
+            </div>
+
             {/* Duration Slider */}
             <div>
               <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '6px' }}>
@@ -161,12 +226,12 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                     fontSize: 'var(--text-xs)',
                     letterSpacing: 'var(--ls-wider)',
                     textTransform: 'uppercase',
-                    color: 'var(--color-text-tertiary)'
+                    color: 'var(--text-muted)'
                   }}
                 >
                   Duration
                 </label>
-                <span style={{ fontSize: 'var(--text-xs)', fontWeight: '600', color: 'var(--color-accent)' }}>
+                <span style={{ fontSize: 'var(--text-xs)', fontWeight: '600', color: 'var(--gold)' }}>
                   {durationDays} {durationDays === 1 ? 'Day' : 'Days'}
                 </span>
               </div>
@@ -178,7 +243,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                 onChange={(e) => setDurationDays(Number(e.target.value))}
                 style={{
                   width: '100%',
-                  accentColor: 'var(--color-accent)',
+                  accentColor: 'var(--gold)',
                   cursor: 'pointer'
                 }}
               />
@@ -192,7 +257,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   fontSize: 'var(--text-xs)',
                   letterSpacing: 'var(--ls-wider)',
                   textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
+                  color: 'var(--text-muted)',
                   marginBottom: '6px'
                 }}
               >
@@ -219,7 +284,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   fontSize: 'var(--text-xs)',
                   letterSpacing: 'var(--ls-wider)',
                   textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
+                  color: 'var(--text-muted)',
                   marginBottom: '6px'
                 }}
               >
@@ -248,7 +313,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   fontSize: 'var(--text-xs)',
                   letterSpacing: 'var(--ls-wider)',
                   textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
+                  color: 'var(--text-muted)',
                   marginBottom: '6px'
                 }}
               >
@@ -267,6 +332,29 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
               </select>
             </div>
 
+            {/* Estimated Expenses Breakdown Widget */}
+            <div
+              style={{
+                backgroundColor: 'rgba(8, 9, 12, 0.65)',
+                border: '1px solid var(--border)',
+                borderRadius: 'var(--radius-xs)',
+                padding: 'var(--space-md)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '4px'
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: 'var(--text-xs)' }}>
+                <span style={{ color: 'var(--text-secondary)' }}>Estimated Total:</span>
+                <span style={{ color: 'var(--gold)', fontWeight: '600' }}>${estimatedExpenses.total} USD</span>
+              </div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.68rem', color: 'var(--text-muted)' }}>
+                <span>Lodging: ${estimatedExpenses.lodging}</span>
+                <span>Dining: ${estimatedExpenses.culinary}</span>
+                <span>Cultural: ${estimatedExpenses.cultural}</span>
+              </div>
+            </div>
+
             {/* Interests Multi-Select */}
             <div>
               <label
@@ -275,7 +363,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   fontSize: 'var(--text-xs)',
                   letterSpacing: 'var(--ls-wider)',
                   textTransform: 'uppercase',
-                  color: 'var(--color-text-tertiary)',
+                  color: 'var(--text-muted)',
                   marginBottom: '6px'
                 }}
               >
@@ -293,9 +381,9 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                         padding: '0.3rem 0.65rem',
                         borderRadius: 'var(--radius-full)',
                         fontSize: '0.7rem',
-                        backgroundColor: isSelected ? 'var(--color-accent-dim)' : 'rgba(255, 255, 255, 0.03)',
-                        border: isSelected ? '1px solid var(--color-accent)' : '1px solid var(--color-border)',
-                        color: isSelected ? 'var(--color-accent-light)' : 'var(--color-text-secondary)',
+                        backgroundColor: isSelected ? 'rgba(224, 162, 77, 0.12)' : 'rgba(255, 255, 255, 0.02)',
+                        border: isSelected ? '1px solid var(--gold)' : '1px solid var(--border)',
+                        color: isSelected ? 'var(--text-primary)' : 'var(--text-secondary)',
                         cursor: 'pointer'
                       }}
                     >
@@ -348,11 +436,12 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                   justifyContent: 'space-between',
                   flexWrap: 'wrap',
                   gap: 'var(--space-md)',
-                  backgroundColor: 'var(--color-surface)',
-                  border: '1px solid var(--color-border)',
+                  backgroundColor: 'var(--surface-elevated)',
+                  border: '1px solid var(--border)',
                   borderRadius: 'var(--radius-xs)',
                   padding: 'var(--space-lg)',
-                  marginBottom: 'var(--space-xl)'
+                  marginBottom: 'var(--space-xl)',
+                  boxShadow: 'var(--shadow-subtle)'
                 }}
               >
                 <div>
@@ -362,13 +451,13 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                       fontFamily: 'var(--font-display)',
                       fontSize: '2rem',
                       fontWeight: '300',
-                      color: 'var(--color-text-primary)'
+                      color: 'var(--text-primary)'
                     }}
                   >
                     {selectedDestination.name} · {durationDays} Days of Discovery
                   </h3>
-                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--color-text-secondary)' }}>
-                    Style: {travelStyle} · Pace: {pace} · Budget: {budget}
+                  <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-secondary)' }}>
+                    Style: {travelStyle} · Pace: {pace} · Budget: {budget} · Est. Total: ${estimatedExpenses.total} USD
                   </p>
                 </div>
 
@@ -403,7 +492,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
                 </div>
               </div>
 
-              {/* Day-by-Day Elegant Render */}
+              {/* Day-by-Day Render */}
               <div className="itinerary-timeline-container">
                 {currentPlan.map((day) => (
                   <ItineraryDay key={day.dayNumber} day={day} />
@@ -418,7 +507,7 @@ export function ItineraryBuilder({ initialDestinationId = 'kyoto' }) {
               </div>
               <h3 className="empty-state-title">Let Intelligence Shape Your Journey</h3>
               <p className="empty-state-desc">
-                Select your preferred destination, pacing, and cultural interests on the left, then click <strong>Create My Journey</strong> to generate an unhurried, day-by-day travel architecture.
+                Select your preferred destination, departure date, pacing, and cultural themes on the left, then click <strong>Create My Journey</strong> to generate an unhurried, day-by-day travel architecture.
               </p>
               <button onClick={handleCreateJourney} className="btn btn-primary btn-sm">
                 <span>Generate Kyoto Sample</span>

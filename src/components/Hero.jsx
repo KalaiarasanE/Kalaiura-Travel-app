@@ -1,6 +1,6 @@
 /* ==============================================================================
    AERORA — CINEMATIC HERO EXPERIENCE
-   Looping atmospheric background video, editorial typography, and telemetry
+   Luxury editorial travel hero with ambient radial gold lighting & video atmosphere
    ============================================================================== */
 
 import React, { useState, useRef } from 'react';
@@ -24,9 +24,10 @@ export function Hero({ onExploreClick }) {
     }
   };
 
-  const weatherString = weather
-    ? `${currentLocation.name}${currentLocation.country ? `, ${currentLocation.country}` : ''} · ${weather.temp}°C · ${weather.condition}`
-    : `${currentLocation.name} · 24°C · Partly Cloudy`;
+  // Weather telemetry format for pill
+  const weatherPillText = weather
+    ? `${currentLocation.name.toUpperCase()}${currentLocation.country ? `, ${currentLocation.country.toUpperCase()}` : ''} · ${weather.temp}°C · ${weather.condition.toUpperCase()}`
+    : `${currentLocation.name.toUpperCase()}, INDIA · 27°C · TROPICAL WARMTH`;
 
   return (
     <section
@@ -41,7 +42,8 @@ export function Hero({ onExploreClick }) {
         justifyContent: 'space-between',
         overflow: 'hidden',
         paddingTop: 'var(--nav-height)',
-        paddingBottom: 'var(--space-2xl)'
+        paddingBottom: 'var(--space-2xl)',
+        backgroundColor: 'var(--background)'
       }}
     >
       {/* Looping Cinematic Travel Video Background */}
@@ -51,7 +53,7 @@ export function Hero({ onExploreClick }) {
           inset: 0,
           zIndex: -2,
           overflow: 'hidden',
-          backgroundColor: '#090a0e'
+          backgroundColor: '#08090C'
         }}
       >
         <video
@@ -65,25 +67,38 @@ export function Hero({ onExploreClick }) {
             width: '100%',
             height: '100%',
             objectFit: 'cover',
-            opacity: 0.55,
-            transform: 'scale(1.04)',
-            transition: 'transform 8s ease-out',
-            filter: 'brightness(0.75) contrast(1.1) saturate(0.9)'
+            opacity: 0.42,
+            transform: 'scale(1.03)',
+            filter: 'brightness(0.68) contrast(1.15) saturate(0.92)'
           }}
         >
-          {/* High-quality scenic alpine & ocean mist video streams */}
           <source
             src="https://cdn.coverr.co/videos/coverr-drone-shot-of-a-winding-mountain-road-5421/1080p.mp4"
             type="video/mp4"
           />
         </video>
 
-        {/* Sophisticated Editorial Vignette Gradient Overlays */}
+        {/* Soft Gold Radial Ambient Light Glow (Motionsites Inspiration) */}
+        <div
+          style={{
+            position: 'absolute',
+            top: '25%',
+            left: '50%',
+            transform: 'translate(-50%, -30%)',
+            width: '800px',
+            height: '550px',
+            background: 'radial-gradient(ellipse at center, rgba(224, 162, 77, 0.16) 0%, rgba(224, 162, 77, 0.04) 45%, transparent 70%)',
+            pointerEvents: 'none',
+            filter: 'blur(30px)'
+          }}
+        />
+
+        {/* Vignette Multi-Stop Gradients */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse at center, rgba(9, 10, 14, 0.2) 0%, rgba(9, 10, 14, 0.85) 85%)',
+            background: 'radial-gradient(ellipse at center, rgba(8, 9, 12, 0.15) 0%, rgba(8, 9, 12, 0.75) 75%, #08090C 100%)',
             pointerEvents: 'none'
           }}
         />
@@ -91,7 +106,7 @@ export function Hero({ onExploreClick }) {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to bottom, rgba(9, 10, 14, 0.4) 0%, transparent 40%, rgba(9, 10, 14, 0.95) 100%)',
+            background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.5) 0%, transparent 35%, rgba(8, 9, 12, 0.8) 70%, #08090C 100%)',
             pointerEvents: 'none'
           }}
         />
@@ -105,34 +120,35 @@ export function Hero({ onExploreClick }) {
           display: 'flex',
           flexDirection: 'column',
           justifyContent: 'center',
-          maxWidth: '920px',
+          maxWidth: '960px',
           margin: '0 auto',
           position: 'relative',
           zIndex: 1,
           textAlign: 'center',
           alignItems: 'center',
-          paddingTop: 'var(--space-2xl)'
+          paddingTop: 'var(--space-3xl)'
         }}
       >
-        {/* Dynamic Location / Weather Indicator in Hero */}
+        {/* 1. Location / Weather Pill */}
         <div
           className="hero-weather-badge"
           style={{
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '0.6rem',
-            padding: '0.45rem 1.15rem',
+            gap: '0.65rem',
+            padding: '0.5rem 1.35rem',
             borderRadius: 'var(--radius-full)',
-            backgroundColor: 'rgba(19, 22, 30, 0.65)',
-            border: '1px solid var(--color-border)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            marginBottom: 'var(--space-lg)',
-            fontSize: 'var(--text-xs)',
-            letterSpacing: '0.12em',
+            backgroundColor: 'rgba(13, 15, 19, 0.8)',
+            border: '1px solid rgba(224, 162, 77, 0.32)',
+            backdropFilter: 'blur(16px)',
+            WebkitBackdropFilter: 'blur(16px)',
+            marginBottom: 'var(--space-xl)',
+            fontSize: '0.76rem',
+            letterSpacing: '0.18em',
             textTransform: 'uppercase',
-            color: 'var(--color-text-secondary)',
-            animation: 'hero-fade-down 1s cubic-bezier(0.16, 1, 0.3, 1)'
+            color: 'var(--text-primary)',
+            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(224, 162, 77, 0.1)',
+            animation: 'hero-fade-down 0.9s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
           <span
@@ -140,15 +156,15 @@ export function Hero({ onExploreClick }) {
               width: '6px',
               height: '6px',
               borderRadius: '50%',
-              backgroundColor: 'var(--color-accent)',
+              backgroundColor: 'var(--gold)',
               display: 'inline-block',
-              boxShadow: '0 0 8px var(--color-accent)'
+              boxShadow: '0 0 10px var(--gold)'
             }}
           />
-          <span>{weatherString}</span>
+          <span style={{ fontWeight: '500' }}>{weatherPillText}</span>
         </div>
 
-        {/* Hero Primary Headline */}
+        {/* 2. Large Editorial Headline */}
         <h1
           className="hero-headline"
           style={{
@@ -156,49 +172,56 @@ export function Hero({ onExploreClick }) {
             fontSize: 'var(--text-hero)',
             fontWeight: '300',
             lineHeight: '1.02',
-            letterSpacing: '0.02em',
+            letterSpacing: '0.015em',
             textTransform: 'uppercase',
-            color: 'var(--color-text-primary)',
-            marginBottom: 'var(--space-md)',
-            animation: 'hero-slide-up 1.1s cubic-bezier(0.16, 1, 0.3, 1)'
+            color: 'var(--text-primary)',
+            marginBottom: 'var(--space-lg)',
+            animation: 'hero-slide-up 1.05s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
-          Go where <br />
-          <span style={{ fontStyle: 'italic', fontWeight: '400', color: 'var(--color-accent-light)' }}>
-            your curiosity
+          GO WHERE <br />
+          <span
+            style={{
+              fontStyle: 'italic',
+              fontWeight: '400',
+              color: 'var(--gold)',
+              textShadow: '0 0 35px rgba(224, 162, 77, 0.3)'
+            }}
+          >
+            YOUR CURIOSITY
           </span> <br />
-          leads.
+          LEADS.
         </h1>
 
-        {/* Hero Supporting Copy */}
+        {/* 3. Supporting Description */}
         <p
           style={{
-            fontSize: 'clamp(1rem, 1.8vw, 1.25rem)',
-            color: '#cfd2db',
-            maxWidth: '640px',
+            fontSize: 'clamp(1.05rem, 1.9vw, 1.3rem)',
+            color: 'var(--text-secondary)',
+            maxWidth: '680px',
             lineHeight: 'var(--lh-relaxed)',
-            marginBottom: 'var(--space-xl)',
+            marginBottom: 'var(--space-2xl)',
             fontWeight: '300',
-            animation: 'hero-slide-up 1.25s cubic-bezier(0.16, 1, 0.3, 1)'
+            animation: 'hero-slide-up 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
           Discover extraordinary places, understand the world around you, and let intelligence shape the journey.
         </p>
 
-        {/* Hero Action Buttons */}
+        {/* 4. Action Buttons */}
         <div
           className="hero-actions"
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: 'var(--space-md)',
-            animation: 'hero-slide-up 1.4s cubic-bezier(0.16, 1, 0.3, 1)'
+            animation: 'hero-slide-up 1.35s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
           <button
             onClick={onExploreClick}
             className="btn btn-primary btn-lg"
-            style={{ minWidth: '200px' }}
+            style={{ minWidth: '220px' }}
           >
             <span>Start Exploring</span>
             <Icon name="arrow-right" size={16} />
@@ -207,10 +230,10 @@ export function Hero({ onExploreClick }) {
           <Link
             to="/planner"
             className="btn btn-secondary btn-lg"
-            style={{ minWidth: '200px' }}
+            style={{ minWidth: '220px' }}
           >
             <span>Plan a Journey</span>
-            <Icon name="sparkles" size={15} style={{ color: 'var(--color-accent)' }} />
+            <Icon name="sparkles" size={15} style={{ color: 'var(--gold)' }} />
           </Link>
         </div>
       </div>
@@ -227,17 +250,17 @@ export function Hero({ onExploreClick }) {
           paddingTop: 'var(--space-md)'
         }}
       >
-        {/* Subtle Video Pause / Play Toggle */}
+        {/* Ambient Video Pause / Play Toggle */}
         <button
           onClick={toggleVideoPlayback}
           className="btn-icon"
           title={isPlaying ? 'Pause Background Video' : 'Play Background Video'}
           aria-label={isPlaying ? 'Pause Background Video' : 'Play Background Video'}
           style={{
-            width: '38px',
-            height: '38px',
-            backgroundColor: 'rgba(19, 22, 30, 0.65)',
-            border: '1px solid var(--color-border)'
+            width: '40px',
+            height: '40px',
+            backgroundColor: 'rgba(13, 15, 19, 0.75)',
+            border: '1px solid var(--border)'
           }}
         >
           <Icon name={isPlaying ? 'pause' : 'play'} size={14} />
@@ -252,7 +275,7 @@ export function Hero({ onExploreClick }) {
             flexDirection: 'column',
             alignItems: 'center',
             gap: '0.45rem',
-            color: 'var(--color-text-secondary)',
+            color: 'var(--text-secondary)',
             fontSize: '0.72rem',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
@@ -265,7 +288,7 @@ export function Hero({ onExploreClick }) {
             style={{
               width: '18px',
               height: '28px',
-              border: '1px solid rgba(245, 242, 235, 0.3)',
+              border: '1px solid rgba(255, 255, 255, 0.25)',
               borderRadius: 'var(--radius-full)',
               display: 'flex',
               justifyContent: 'center',
@@ -276,26 +299,16 @@ export function Hero({ onExploreClick }) {
               style={{
                 width: '3px',
                 height: '6px',
-                backgroundColor: 'var(--color-accent)',
+                backgroundColor: 'var(--gold)',
                 borderRadius: '1px',
+                boxShadow: '0 0 6px var(--gold)',
                 animation: 'scroll-wheel 1.8s infinite'
               }}
             />
           </div>
         </button>
 
-        {/* Aesthetic Coordinate Monogram */}
-        <span
-          style={{
-            fontFamily: 'var(--font-mono)',
-            fontSize: '0.7rem',
-            letterSpacing: '0.12em',
-            color: 'var(--color-text-muted)',
-            display: 'none'
-          }}
-        >
-          AERORA · 2026
-        </span>
+        <div style={{ width: '40px' }} />
       </div>
 
       <style>{`
