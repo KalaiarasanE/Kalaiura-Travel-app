@@ -39,7 +39,7 @@ export function JourneyMap() {
 
   return (
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
-      <div className="section-header centered">
+      <div className="section-header centered" data-home-reveal>
         <span className="eyebrow">Cartographic Trajectory</span>
         <h2 className="section-title">
           The Grand <span className="animate-gradient-shift">Transcontinental Arc</span>
@@ -52,6 +52,8 @@ export function JourneyMap() {
       {/* Visual Map Canvas Card */}
       <div
         className="prompt-card-hover animate-parallax-fade-up"
+        data-home-reveal
+        data-home-reveal-delay="1"
         style={{
           borderRadius: 'var(--radius-sm)',
           overflow: 'hidden',
@@ -89,9 +91,9 @@ export function JourneyMap() {
           >
             <defs>
               <linearGradient id="routeGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#d99b4f" stopOpacity="0.2" />
-                <stop offset="50%" stopColor="#d99b4f" stopOpacity="0.85" />
-                <stop offset="100%" stopColor="#ecc07e" stopOpacity="0.9" />
+                <stop offset="0%" stopColor="#d99b4f" stopOpacity="0.3" />
+                <stop offset="50%" stopColor="#d99b4f" stopOpacity="0.95" />
+                <stop offset="100%" stopColor="#ecc07e" stopOpacity="0.95" />
               </linearGradient>
             </defs>
 
@@ -109,9 +111,9 @@ export function JourneyMap() {
               d={pathD}
               fill="none"
               stroke="url(#routeGradient)"
-              strokeWidth="2.5"
-              strokeDasharray="6 6"
-              className="animated-route-dash"
+              strokeWidth="3"
+              strokeDasharray="8 8"
+              className="map-route-beam"
             />
 
             {/* Waypoint Pins & Rings */}
@@ -122,6 +124,7 @@ export function JourneyMap() {
                   key={pt.id}
                   transform={`translate(${pt.x}, ${pt.y})`}
                   onClick={() => setActiveWaypointId(pt.id)}
+                  className="waypoint-pin"
                   style={{ cursor: 'pointer' }}
                 >
                   {/* Outer pulse when active */}
@@ -181,7 +184,8 @@ export function JourneyMap() {
             display: 'grid',
             gridTemplateColumns: 'minmax(280px, 340px) 1fr auto',
             gap: 'var(--space-xl)',
-            alignItems: 'center'
+            alignItems: 'center',
+            transition: 'background-color 0.3s ease'
           }}
         >
           {/* Waypoint Preview Thumbnail & Identity */}
@@ -258,12 +262,6 @@ export function JourneyMap() {
       </div>
 
       <style>{`
-        .animated-route-dash {
-          animation: route-dash 24s linear infinite;
-        }
-        @keyframes route-dash {
-          to { stroke-dashoffset: -300; }
-        }
         .waypoint-pulse-ring {
           animation: waypoint-pulse 2s ease-out infinite;
         }

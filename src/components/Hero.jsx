@@ -1,9 +1,10 @@
 /* ==============================================================================
-   AERORA — CINEMATIC HERO EXPERIENCE
-   Luxury editorial travel hero with ambient radial gold lighting & video atmosphere
+   KALAIURA — CINEMATIC HERO EXPERIENCE (MOTIONSITES AI UPGRADE)
+   Luxury editorial travel hero with ambient radial gold lighting,
+   interactive 3D mouse parallax, spring entrance animations & video atmosphere
    ============================================================================== */
 
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './Icons';
 import { useLocation } from '../hooks/useLocation';
@@ -12,6 +13,7 @@ export function Hero({ onExploreClick }) {
   const { currentLocation, weather } = useLocation();
   const [isPlaying, setIsPlaying] = useState(true);
   const videoRef = useRef(null);
+  const heroRef = useRef(null);
 
   const toggleVideoPlayback = () => {
     if (videoRef.current) {
@@ -27,35 +29,63 @@ export function Hero({ onExploreClick }) {
   // Weather telemetry format for pill
   const weatherPillText = weather
     ? `${currentLocation.name.toUpperCase()}${currentLocation.country ? `, ${currentLocation.country.toUpperCase()}` : ''} · ${weather.temp}°C · ${weather.condition.toUpperCase()}`
-    : `${currentLocation.name.toUpperCase()}, INDIA · 27°C · TROPICAL WARMTH`;
+    : `${currentLocation.name.toUpperCase()}, INDIA · 30°C · TROPICAL WARMTH`;
+
+  // Interactive 3D mouse parallax effect (desktop fine-pointer only)
+  useEffect(() => {
+    const isFine = window.matchMedia('(pointer: fine)').matches && !('ontouchstart' in window);
+    const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!isFine || prefersReduced) return;
+
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId = null;
+
+    const handleMouseMove = (e) => {
+      const rect = hero.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width - 0.5;
+      const y = (e.clientY - rect.top) / rect.height - 0.5;
+      mouseX = x;
+      mouseY = y;
+    };
+
+    const updateParallax = () => {
+      currentX += (mouseX - currentX) * 0.08;
+      currentY += (mouseY - currentY) * 0.08;
+
+      // Video subtle opposite parallax
+      hero.style.setProperty('--hero-parallax-x', `${(currentX * -18).toFixed(1)}px`);
+      hero.style.setProperty('--hero-parallax-y', `${(currentY * -18).toFixed(1)}px`);
+
+      // Ambient radial glow parallax
+      hero.style.setProperty('--hero-glow-x', `${(currentX * 45).toFixed(1)}px`);
+      hero.style.setProperty('--hero-glow-y', `${(currentY * 45).toFixed(1)}px`);
+
+      rafId = requestAnimationFrame(updateParallax);
+    };
+
+    hero.addEventListener('mousemove', handleMouseMove, { passive: true });
+    rafId = requestAnimationFrame(updateParallax);
+
+    return () => {
+      hero.removeEventListener('mousemove', handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
+    };
+  }, []);
 
   return (
     <section
+      ref={heroRef}
       className="hero-section"
       aria-label="Welcome to KALAIURA"
-      style={{
-        position: 'relative',
-        minHeight: '100vh',
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        justifyContent: 'space-between',
-        overflow: 'hidden',
-        paddingTop: 'var(--nav-height)',
-        paddingBottom: 'var(--space-2xl)',
-        backgroundColor: 'var(--background)'
-      }}
     >
       {/* Looping Cinematic Travel Video Background */}
-      <div
-        style={{
-          position: 'absolute',
-          inset: 0,
-          zIndex: -2,
-          overflow: 'hidden',
-          backgroundColor: '#08090C'
-        }}
-      >
+      <div className="hero-video-wrap">
         <video
           ref={videoRef}
           autoPlay
@@ -63,14 +93,7 @@ export function Hero({ onExploreClick }) {
           muted
           playsInline
           poster="https://images.unsplash.com/photo-1506905925346-21bda4d32df4?q=80&w=2000&auto=format&fit=crop"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            opacity: 0.42,
-            transform: 'scale(1.03)',
-            filter: 'brightness(0.68) contrast(1.15) saturate(0.92)'
-          }}
+          className="hero-video-element"
         >
           <source
             src="https://cdn.coverr.co/videos/coverr-drone-shot-of-a-winding-mountain-road-5421/1080p.mp4"
@@ -79,26 +102,14 @@ export function Hero({ onExploreClick }) {
         </video>
 
         {/* Soft Gold Radial Ambient Light Glow (Motionsites Inspiration) */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '25%',
-            left: '50%',
-            transform: 'translate(-50%, -30%)',
-            width: '800px',
-            height: '550px',
-            background: 'radial-gradient(ellipse at center, rgba(224, 162, 77, 0.16) 0%, rgba(224, 162, 77, 0.04) 45%, transparent 70%)',
-            pointerEvents: 'none',
-            filter: 'blur(30px)'
-          }}
-        />
+        <div className="hero-ambient-glow" />
 
         {/* Vignette Multi-Stop Gradients */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'radial-gradient(ellipse at center, rgba(8, 9, 12, 0.15) 0%, rgba(8, 9, 12, 0.75) 75%, #08090C 100%)',
+            background: 'radial-gradient(ellipse at center, rgba(8, 9, 12, 0.1) 0%, rgba(8, 9, 12, 0.72) 75%, #08090C 100%)',
             pointerEvents: 'none'
           }}
         />
@@ -106,7 +117,7 @@ export function Hero({ onExploreClick }) {
           style={{
             position: 'absolute',
             inset: 0,
-            background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.5) 0%, transparent 35%, rgba(8, 9, 12, 0.8) 70%, #08090C 100%)',
+            background: 'linear-gradient(to bottom, rgba(8, 9, 12, 0.4) 0%, transparent 35%, rgba(8, 9, 12, 0.85) 75%, #08090C 100%)',
             pointerEvents: 'none'
           }}
         />
@@ -123,101 +134,34 @@ export function Hero({ onExploreClick }) {
           maxWidth: '960px',
           margin: '0 auto',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
           textAlign: 'center',
           alignItems: 'center',
           paddingTop: 'var(--space-3xl)'
         }}
       >
         {/* 1. Location / Weather Pill */}
-        <div
-          className="hero-weather-badge"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '0.65rem',
-            padding: '0.5rem 1.35rem',
-            borderRadius: 'var(--radius-full)',
-            backgroundColor: 'rgba(13, 15, 19, 0.8)',
-            border: '1px solid rgba(224, 162, 77, 0.32)',
-            backdropFilter: 'blur(16px)',
-            WebkitBackdropFilter: 'blur(16px)',
-            marginBottom: 'var(--space-xl)',
-            fontSize: '0.76rem',
-            letterSpacing: '0.18em',
-            textTransform: 'uppercase',
-            color: 'var(--text-primary)',
-            boxShadow: '0 4px 20px rgba(0, 0, 0, 0.4), 0 0 20px rgba(224, 162, 77, 0.1)',
-            animation: 'hero-fade-down 0.9s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-        >
-          <span
-            className="pulse-radar-dot"
-            style={{
-              width: '6px',
-              height: '6px',
-              borderRadius: '50%',
-              backgroundColor: 'var(--gold)',
-              display: 'inline-block'
-            }}
-          />
+        <div className="hero-weather-badge">
+          <span className="pulse-radar-dot" />
           <span style={{ fontWeight: '500' }}>{weatherPillText}</span>
         </div>
 
         {/* 2. Large Editorial Headline */}
-        <h1
-          className="hero-headline"
-          style={{
-            fontFamily: 'var(--font-display)',
-            fontSize: 'var(--text-hero)',
-            fontWeight: '300',
-            lineHeight: '1.02',
-            letterSpacing: '0.015em',
-            textTransform: 'uppercase',
-            color: 'var(--text-primary)',
-            marginBottom: 'var(--space-lg)',
-            animation: 'hero-slide-up 1.05s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-        >
+        <h1 className="hero-headline">
           GO WHERE <br />
-          <span
-            className="animate-gradient-shift"
-            style={{
-              fontStyle: 'italic',
-              fontWeight: '400',
-              textShadow: '0 0 35px rgba(224, 162, 77, 0.3)'
-            }}
-          >
+          <span className="animate-gradient-shift" style={{ fontStyle: 'italic', fontWeight: '400' }}>
             YOUR CURIOSITY
           </span> <br />
           LEADS.
         </h1>
 
         {/* 3. Supporting Description */}
-        <p
-          style={{
-            fontSize: 'clamp(1.05rem, 1.9vw, 1.3rem)',
-            color: 'var(--text-secondary)',
-            maxWidth: '680px',
-            lineHeight: 'var(--lh-relaxed)',
-            marginBottom: 'var(--space-2xl)',
-            fontWeight: '300',
-            animation: 'hero-slide-up 1.2s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-        >
+        <p className="hero-subtitle">
           Discover extraordinary places, understand the world around you, and let intelligence shape the journey.
         </p>
 
         {/* 4. Action Buttons */}
-        <div
-          className="hero-actions"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'var(--space-md)',
-            animation: 'hero-slide-up 1.35s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-        >
+        <div className="hero-actions">
           <button
             onClick={onExploreClick}
             className="btn btn-primary btn-lg"
@@ -240,27 +184,30 @@ export function Hero({ onExploreClick }) {
 
       {/* Bottom Controls: Video Toggle & Scroll Indicator */}
       <div
-        className="container"
+        className="container hero-bottom-controls"
         style={{
           display: 'flex',
           alignItems: 'flex-end',
           justifyContent: 'space-between',
           position: 'relative',
-          zIndex: 1,
+          zIndex: 2,
           paddingTop: 'var(--space-md)'
         }}
       >
         {/* Ambient Video Pause / Play Toggle */}
         <button
           onClick={toggleVideoPlayback}
-          className="btn-icon"
+          className="btn-icon hero-video-toggle"
           title={isPlaying ? 'Pause Background Video' : 'Play Background Video'}
           aria-label={isPlaying ? 'Pause Background Video' : 'Play Background Video'}
           style={{
-            width: '40px',
-            height: '40px',
-            backgroundColor: 'rgba(13, 15, 19, 0.75)',
-            border: '1px solid var(--border)'
+            width: '42px',
+            height: '42px',
+            borderRadius: '50%',
+            backgroundColor: 'rgba(13, 15, 19, 0.8)',
+            border: '1px solid var(--border)',
+            backdropFilter: 'blur(10px)',
+            color: 'var(--text-primary)'
           }}
         >
           <Icon name={isPlaying ? 'pause' : 'play'} size={14} />
@@ -269,61 +216,58 @@ export function Hero({ onExploreClick }) {
         {/* Subtle Scroll Indicator */}
         <button
           onClick={onExploreClick}
+          className="hero-scroll-btn"
           aria-label="Scroll to discover destinations"
           style={{
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            gap: '0.45rem',
+            gap: '0.5rem',
             color: 'var(--text-secondary)',
             fontSize: '0.72rem',
             letterSpacing: '0.22em',
             textTransform: 'uppercase',
             cursor: 'pointer',
-            transition: 'color var(--transition-fast)'
+            background: 'none',
+            border: 'none',
+            padding: '4px'
           }}
         >
           <span>Scroll to Discover</span>
           <div
+            className="hero-scroll-pill"
             style={{
-              width: '18px',
-              height: '28px',
+              width: '20px',
+              height: '32px',
               border: '1px solid rgba(255, 255, 255, 0.25)',
-              borderRadius: 'var(--radius-full)',
+              borderRadius: '9999px',
               display: 'flex',
               justifyContent: 'center',
-              paddingTop: '5px'
+              paddingTop: '6px'
             }}
           >
             <span
               style={{
                 width: '3px',
-                height: '6px',
+                height: '7px',
                 backgroundColor: 'var(--gold)',
-                borderRadius: '1px',
-                boxShadow: '0 0 6px var(--gold)',
-                animation: 'scroll-wheel 1.8s infinite'
+                borderRadius: '2px',
+                boxShadow: '0 0 8px var(--gold)',
+                animation: 'hero-scroll-wheel 1.9s infinite ease-in-out'
               }}
             />
           </div>
         </button>
 
-        <div style={{ width: '40px' }} />
+        <div style={{ width: '42px' }} />
       </div>
 
       <style>{`
-        @keyframes hero-slide-up {
-          from { opacity: 0; transform: translateY(28px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes hero-fade-down {
-          from { opacity: 0; transform: translateY(-16px); }
-          to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes scroll-wheel {
+        @keyframes hero-scroll-wheel {
           0% { transform: translateY(0); opacity: 1; }
-          60% { transform: translateY(10px); opacity: 0; }
-          100% { transform: translateY(0); opacity: 0; }
+          50% { transform: translateY(11px); opacity: 0; }
+          51% { transform: translateY(-3px); opacity: 0; }
+          100% { transform: translateY(0); opacity: 1; }
         }
       `}</style>
     </section>

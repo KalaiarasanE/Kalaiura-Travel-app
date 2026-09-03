@@ -44,11 +44,13 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
     }
   ]);
 
-  const messagesEndRef = useRef(null);
+  const chatStreamRef = useRef(null);
 
-  // Auto-scroll chat to latest message
+  // Auto-scroll the internal chat messages stream container ONLY (never affects page window scroll)
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    if (chatStreamRef.current) {
+      chatStreamRef.current.scrollTop = chatStreamRef.current.scrollHeight;
+    }
   }, [messages, isLoading]);
 
   // Handle destination switch
@@ -258,6 +260,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
 
       {/* Chat Messages Stream */}
       <div
+        ref={chatStreamRef}
         style={{
           flex: 1,
           overflowY: 'auto',
@@ -314,7 +317,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           </div>
         )}
 
-        <div ref={messagesEndRef} />
+        
       </div>
 
       {/* Destination Landmark Recommendations Quick-Drawer */}

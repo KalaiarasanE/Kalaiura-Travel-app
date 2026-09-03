@@ -11,9 +11,11 @@ export function EditorialCTA() {
   return (
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
       <div
+        className="prompt-card-hover animate-parallax-fade-up"
+        data-home-reveal
         style={{
           backgroundColor: 'var(--surface-elevated)',
-          border: '1px solid rgba(224, 162, 77, 0.3)',
+          border: '1px solid rgba(224, 162, 77, 0.35)',
           borderRadius: 'var(--radius-sm)',
           padding: 'clamp(3rem, 6vw, 5.5rem) var(--space-2xl)',
           textAlign: 'center',
@@ -22,18 +24,18 @@ export function EditorialCTA() {
           boxShadow: 'var(--shadow-elevated)'
         }}
       >
-        {/* Soft Gold Radial Illumination */}
+        {/* Soft Gold Radial Illumination Core */}
         <div
           style={{
             position: 'absolute',
             top: '50%',
             left: '50%',
             transform: 'translate(-50%, -50%)',
-            width: '650px',
-            height: '450px',
-            background: 'radial-gradient(ellipse at center, rgba(224, 162, 77, 0.18) 0%, rgba(224, 162, 77, 0.04) 50%, transparent 70%)',
+            width: '680px',
+            height: '460px',
+            background: 'radial-gradient(ellipse at center, rgba(224, 162, 77, 0.2) 0%, rgba(224, 162, 77, 0.04) 50%, transparent 70%)',
             pointerEvents: 'none',
-            filter: 'blur(30px)'
+            filter: 'blur(35px)'
           }}
         />
 

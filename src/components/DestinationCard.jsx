@@ -20,6 +20,8 @@ export function DestinationCard({ destination, variant = 'standard', index = 0 }
   return (
     <article
       className="prompt-card-hover animate-parallax-fade-up"
+      data-home-reveal
+      data-home-reveal-delay={(index % 4) + 1}
       style={{
         gridColumn: isFeatured || isWide ? 'span 2' : 'span 1',
         gridRow: isTall ? 'span 2' : 'span 1',

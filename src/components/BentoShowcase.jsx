@@ -11,7 +11,7 @@ export function BentoShowcase() {
   return (
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
       {/* Section Header */}
-      <div className="section-header centered">
+      <div className="section-header centered" data-home-reveal>
         <span className="eyebrow">Intelligence Architecture</span>
         <h2 className="section-title">
           Engineered for the <span className="animate-gradient-shift">Curious Mind</span>
@@ -31,13 +31,14 @@ export function BentoShowcase() {
       >
         {/* Card 1: Live Climate Telemetry (Span 7) */}
         <div
-          className="prompt-card-hover animate-parallax-fade-up"
+          className="bento-card prompt-card-hover animate-parallax-fade-up"
+          data-home-reveal
+          data-home-reveal-delay="1"
           style={{
             gridColumn: 'span 7',
             padding: 'var(--space-2xl)',
             position: 'relative',
-            overflow: 'hidden',
-            animationDelay: '0.1s'
+            overflow: 'hidden'
           }}
         >
           {/* Subtle gold radial background glow */}
@@ -54,9 +55,10 @@ export function BentoShowcase() {
           />
 
           <div
+            className="bento-icon-badge"
             style={{
-              width: '40px',
-              height: '40px',
+              width: '44px',
+              height: '44px',
               borderRadius: 'var(--radius-xs)',
               backgroundColor: 'rgba(224, 162, 77, 0.1)',
               border: '1px solid rgba(224, 162, 77, 0.25)',
@@ -135,7 +137,9 @@ export function BentoShowcase() {
 
         {/* Card 2: Neural Travel Guide (Span 5) */}
         <div
-          className="prompt-card-hover animate-parallax-fade-up"
+          className="bento-card prompt-card-hover animate-parallax-fade-up"
+          data-home-reveal
+          data-home-reveal-delay="2"
           style={{
             gridColumn: 'span 5',
             padding: 'var(--space-2xl)',
@@ -143,15 +147,15 @@ export function BentoShowcase() {
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            animationDelay: '0.2s'
+            justifyContent: 'space-between'
           }}
         >
           <div>
             <div
+              className="bento-icon-badge"
               style={{
-                width: '40px',
-                height: '40px',
+                width: '44px',
+                height: '44px',
                 borderRadius: 'var(--radius-xs)',
                 backgroundColor: 'rgba(224, 162, 77, 0.1)',
                 border: '1px solid rgba(224, 162, 77, 0.25)',
@@ -203,19 +207,21 @@ export function BentoShowcase() {
 
         {/* Card 3: Cartographic Routing (Span 5) */}
         <div
-          className="prompt-card-hover animate-parallax-fade-up"
+          className="bento-card prompt-card-hover animate-parallax-fade-up"
+          data-home-reveal
+          data-home-reveal-delay="3"
           style={{
             gridColumn: 'span 5',
             padding: 'var(--space-2xl)',
             position: 'relative',
-            overflow: 'hidden',
-            animationDelay: '0.3s'
+            overflow: 'hidden'
           }}
         >
           <div
+            className="bento-icon-badge"
             style={{
-              width: '40px',
-              height: '40px',
+              width: '44px',
+              height: '44px',
               borderRadius: 'var(--radius-xs)',
               backgroundColor: 'rgba(224, 162, 77, 0.1)',
               border: '1px solid rgba(224, 162, 77, 0.25)',
@@ -257,7 +263,9 @@ export function BentoShowcase() {
 
         {/* Card 4: Curated Perspective Memoirs (Span 7) */}
         <div
-          className="prompt-card-hover animate-parallax-fade-up"
+          className="bento-card prompt-card-hover animate-parallax-fade-up"
+          data-home-reveal
+          data-home-reveal-delay="4"
           style={{
             gridColumn: 'span 7',
             padding: 'var(--space-2xl)',
@@ -265,15 +273,15 @@ export function BentoShowcase() {
             overflow: 'hidden',
             display: 'flex',
             flexDirection: 'column',
-            justifyContent: 'space-between',
-            animationDelay: '0.4s'
+            justifyContent: 'space-between'
           }}
         >
           <div>
             <div
+              className="bento-icon-badge"
               style={{
-                width: '40px',
-                height: '40px',
+                width: '44px',
+                height: '44px',
                 borderRadius: 'var(--radius-xs)',
                 backgroundColor: 'rgba(224, 162, 77, 0.1)',
                 border: '1px solid rgba(224, 162, 77, 0.25)',

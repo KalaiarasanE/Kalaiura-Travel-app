@@ -33,7 +33,7 @@ export function TravelerPerspectives() {
 
   return (
     <section className="container" style={{ padding: 'var(--space-4xl) 0' }}>
-      <div className="section-header centered">
+      <div className="section-header centered" data-home-reveal>
         <span className="eyebrow">Dispatches & Memoirs</span>
         <h2 className="section-title">
           Traveler <span className="animate-gradient-shift">Perspectives</span>
@@ -54,77 +54,78 @@ export function TravelerPerspectives() {
           <article
             key={idx}
             className="prompt-card-hover animate-parallax-fade-up"
+            data-home-reveal
+            data-home-reveal-delay={idx + 1}
             style={{
               padding: 'var(--space-2xl)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
-              animationDelay: `${idx * 0.15}s`,
-              cursor: 'default',
-              position: 'relative',
-              overflow: 'hidden'
+              animationDelay: `${idx * 0.12}s`
             }}
           >
-            {/* Top Quote Mark Icon */}
             <div>
               <div
                 style={{
-                  fontFamily: 'var(--font-display)',
-                  fontSize: '4.5rem',
-                  lineHeight: '0.8',
-                  color: 'rgba(224, 162, 77, 0.25)',
-                  marginBottom: 'var(--space-xs)'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                  color: 'var(--gold)',
+                  marginBottom: 'var(--space-lg)'
                 }}
               >
-                “
+                {[...Array(5)].map((_, i) => (
+                  <Icon key={i} name="sparkles" size={14} />
+                ))}
               </div>
 
               <blockquote
                 style={{
                   fontFamily: 'var(--font-display)',
                   fontSize: '1.25rem',
-                  fontWeight: '300',
-                  lineHeight: '1.5',
+                  lineHeight: 'var(--lh-relaxed)',
                   color: 'var(--text-primary)',
-                  marginBottom: 'var(--space-xl)'
+                  fontWeight: '300',
+                  fontStyle: 'italic',
+                  margin: '0 0 var(--space-xl) 0'
                 }}
               >
-                {ref.quote}
+                “{ref.quote}”
               </blockquote>
             </div>
 
-            {/* Author Metadata */}
             <div
               style={{
+                borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+                paddingTop: 'var(--space-md)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between',
-                paddingTop: 'var(--space-md)',
-                borderTop: '1px solid var(--border)'
+                justifyContent: 'space-between'
               }}
             >
               <div>
                 <div style={{ fontSize: 'var(--text-sm)', fontWeight: '600', color: 'var(--text-primary)' }}>
                   {ref.author}
                 </div>
-                <div style={{ fontSize: '0.72rem', color: 'var(--text-muted)' }}>
+                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
                   {ref.role}
                 </div>
               </div>
 
-              <div
+              <span
                 style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '4px',
-                  fontSize: 'var(--text-xs)',
+                  fontSize: '0.72rem',
+                  letterSpacing: '0.08em',
+                  textTransform: 'uppercase',
                   color: 'var(--gold)',
-                  letterSpacing: '0.05em'
+                  backgroundColor: 'rgba(224, 162, 77, 0.08)',
+                  padding: '0.2rem 0.55rem',
+                  borderRadius: '9999px',
+                  border: '1px solid rgba(224, 162, 77, 0.2)'
                 }}
               >
-                <Icon name="map-pin" size={12} />
-                <span>{ref.location}</span>
-              </div>
+                {ref.location}
+              </span>
             </div>
           </article>
         ))}

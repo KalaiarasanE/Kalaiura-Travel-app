@@ -23,6 +23,8 @@ export function PlaceCard({ place, index = 0 }) {
   return (
     <article
       className="prompt-card-hover animate-parallax-fade-up"
+      data-home-reveal
+      data-home-reveal-delay={(index % 3) + 1}
       style={{ animationDelay: `${(index % 6) * 0.08}s` }}
     >
       {/* 1. Upper Media Showcase (Motionsites Aspect-Ratio Media Wrap) */}

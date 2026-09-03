@@ -8,7 +8,8 @@ import { DESTINATIONS, REGIONS, CLIMATES, TRAVEL_STYLES, BUDGET_LEVELS, SEASONS 
 import { DestinationCard } from './DestinationCard';
 import { Icon } from './Icons';
 
-export function DestinationExplorer({ id = 'destinations-explorer' }) {
+export function DestinationExplorer({ id = 'destinations-explorer', isHome = false }) {
+  const explorerClassName = isHome ? 'destination-explorer-home' : '';
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegion, setSelectedRegion] = useState('All');
   const [selectedClimate, setSelectedClimate] = useState('All');
@@ -54,9 +55,9 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
   };
 
   return (
-    <section id={id} className="container" style={{ paddingBottom: 'var(--space-4xl)' }}>
+    <section id={id} className={`container ${explorerClassName}`} style={{ paddingBottom: 'var(--space-4xl)' }}>
       {/* Section Header */}
-      <div className="section-header centered">
+      <div className="section-header centered" data-home-reveal>
         <span className="eyebrow">Editorial Directory</span>
         <h2 className="section-title">
           Curated <span className="animate-gradient-shift">Sanctuaries</span>
@@ -67,7 +68,7 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
       </div>
 
       {/* Motionsites Capsule Navigation & Filter Bar */}
-      <div style={{ marginBottom: 'var(--space-2xl)' }}>
+      <div style={{ marginBottom: 'var(--space-2xl)' }} data-home-reveal data-home-reveal-delay="1">
         {/* Top Search Bar */}
         <div style={{ position: 'relative', marginBottom: 'var(--space-lg)', maxWidth: '640px', margin: '0 auto var(--space-lg)' }}>
           <Icon
@@ -146,7 +147,7 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
                     key={region}
                     type="button"
                     onClick={() => setSelectedRegion(region)}
-                    className={`motionsites-pill-btn ${isActive ? 'active gold-accent' : ''}`}
+                    className={`motionsites-pill-btn capsule-filter-pill ${isActive ? 'active gold-accent is-active' : ''}`}
                   >
                     {region === 'All' ? 'All Sanctuaries' : region}
                   </button>
@@ -159,7 +160,7 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
               <button
                 type="button"
                 onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-                className="motionsites-dropdown-btn"
+                className="motionsites-dropdown-btn capsule-filter-pill"
                 style={{
                   borderColor: showAdvancedFilters || hasActiveFilters ? 'var(--gold)' : '#3b3b3b',
                   color: showAdvancedFilters || hasActiveFilters ? 'var(--text-primary)' : 'rgba(255, 255, 255, 0.72)'
@@ -174,7 +175,7 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
                 <button
                   type="button"
                   onClick={resetAllFilters}
-                  className="motionsites-dropdown-btn"
+                  className="motionsites-dropdown-btn capsule-filter-pill"
                   style={{ color: '#e53e3e', borderColor: 'rgba(229, 62, 62, 0.4)' }}
                 >
                   <Icon name="close" size={12} />
@@ -282,6 +283,8 @@ export function DestinationExplorer({ id = 'destinations-explorer' }) {
       {/* Destination Feature Grid (Responsive Motionsites Prompt Cards) */}
       {filteredDestinations.length > 0 ? (
         <div
+          data-home-reveal
+          data-home-reveal-delay="2"
           style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',

@@ -52,15 +52,10 @@ export function StatsTicker() {
   return (
     <section
       className="stats-ticker-section"
+      data-home-reveal="fade-down"
       style={{
-        borderTop: '1px solid var(--border)',
-        borderBottom: '1px solid var(--border)',
-        backgroundColor: 'var(--surface)',
         position: 'relative',
-        zIndex: 2,
-        overflow: 'hidden',
-        maskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)',
-        WebkitMaskImage: 'linear-gradient(to right, transparent, black 6%, black 94%, transparent)'
+        zIndex: 2
       }}
     >
       <div
@@ -75,31 +70,12 @@ export function StatsTicker() {
         {tickerItems.map((stat, idx) => (
           <div
             key={idx}
+            className="ticker-stat-item"
             style={{
-              display: 'flex',
-              alignItems: 'center',
-              gap: 'var(--space-md)',
-              padding: '0 var(--space-xl)',
-              borderRight: '1px solid rgba(255, 255, 255, 0.08)',
-              flexShrink: 0,
-              cursor: 'default',
-              transition: 'transform 0.2s ease'
+              cursor: 'default'
             }}
           >
-            <div
-              style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '9999px',
-                backgroundColor: 'rgba(224, 162, 77, 0.08)',
-                border: '1px solid rgba(224, 162, 77, 0.22)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--gold)',
-                flexShrink: 0
-              }}
-            >
+            <div className="ticker-icon-wrap">
               <Icon name={stat.icon} size={18} />
             </div>
 
