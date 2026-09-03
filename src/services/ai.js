@@ -1,86 +1,114 @@
 /* ==============================================================================
-   AERORA — AI TRAVEL INTELLIGENCE SERVICE
-   Google Gemini API integration with sophisticated editorial knowledge fallback
+   KALAIURA — AI TRAVEL INTELLIGENCE SERVICE
+   Place-specific personal travel assistant with dynamic destination detection,
+   rich destination cards, and structured answers for all project destinations.
    ============================================================================== */
 
 import { DESTINATIONS } from '../data/destinations';
 import { PLACES } from '../data/places';
+import { DESTINATION_GUIDE_DATA } from '../data/destinationGuideData';
+
+// Map of keywords and aliases to identify destinations from natural queries
+const DESTINATION_ALIASES = [
+  { id: 'goa', keywords: ['goa', 'panaji', 'panjim', 'calangute', 'baga', 'anjuna', 'palolem', 'aguada'] },
+  { id: 'kerala', keywords: ['kerala', 'alleppey', 'alappuzha', 'kochi', 'cochin', 'varkala', 'kumarakom', 'periyar'] },
+  { id: 'rajasthan', keywords: ['rajasthan', 'jodhpur', 'jaisalmer', 'thar', 'bikaner', 'pushkar', 'mewar'] },
+  { id: 'kashmir', keywords: ['kashmir', 'srinagar', 'gulmarg', 'pahalgam', 'sonamarg', 'dal lake'] },
+  { id: 'himachal-pradesh', keywords: ['himachal', 'himachal pradesh', 'spiti', 'dharamshala', 'mcleodganj', 'kasol', 'kullu', 'kalka', 'shimla'] },
+  { id: 'manali', keywords: ['manali', 'solang', 'atal tunnel', 'sissu', 'rohtang', 'hadimba'] },
+  { id: 'uttarakhand', keywords: ['uttarakhand', 'mussoorie', 'nainital', 'corbett', 'haridwar', 'auli', 'ganga aarti'] },
+  { id: 'rishikesh', keywords: ['rishikesh', 'triveni ghat', 'lakshman jhula', 'beatles ashram', 'shivpuri'] },
+  { id: 'tamil-nadu', keywords: ['tamil nadu', 'tamilnadu', 'madurai', 'mahabalipuram', 'thanjavur', 'rameswaram', 'chennai', 'chettinad'] },
+  { id: 'ooty', keywords: ['ooty', 'udhagamandalam', 'nilgiri', 'coonoor', 'doddabetta', 'pykara'] },
+  { id: 'karnataka', keywords: ['karnataka', 'hampi', 'mysore', 'mysuru', 'gokarna', 'chikmagalur', 'bengaluru', 'bangalore'] },
+  { id: 'coorg', keywords: ['coorg', 'kodagu', 'madikeri', 'talacauvery', 'bylakuppe', 'abbey falls', 'dubare'] },
+  { id: 'wayanad', keywords: ['wayanad', 'edakkal', 'banasura', 'chembra', 'kuruva', 'soochipara'] },
+  { id: 'munnar', keywords: ['munnar', 'kolukkumalai', 'eravikulam', 'mattupetty', 'lockhart'] },
+  { id: 'maharashtra', keywords: ['maharashtra', 'mumbai', 'bombay', 'ajanta', 'ellora', 'lonavala', 'alibaug', 'nashik', 'mahabaleshwar'] },
+  { id: 'meghalaya', keywords: ['meghalaya', 'shillong', 'cherrapunji', 'sohra', 'dawki', 'mawlynnong', 'living root bridge'] },
+  { id: 'sikkim', keywords: ['sikkim', 'gangtok', 'tsomgo', 'nathula', 'pelling', 'yumthang', 'kangchenjunga'] },
+  { id: 'andaman-nicobar', keywords: ['andaman', 'nicobar', 'havelock', 'radhanagar', 'neil island', 'port blair', 'cellular jail'] },
+  { id: 'taj-mahal-agra', keywords: ['taj mahal', 'agra', 'fatehpur sikri', 'mehtab bagh'] },
+  { id: 'jaipur', keywords: ['jaipur', 'pink city', 'amber fort', 'hawa mahal', 'jantar mantar', 'nahargarh'] },
+  { id: 'udaipur', keywords: ['udaipur', 'lake pichola', 'city palace', 'jag mandir', 'saheliyon'] },
+  { id: 'varanasi', keywords: ['varanasi', 'kashi', 'banaras', 'dashashwamedh', 'sarnath', 'manikarnika'] },
+  { id: 'leh-ladakh', keywords: ['ladakh', 'leh', 'pangong', 'nubra', 'khardung la', 'zanskar', 'hunder', 'thiksey'] },
+  { id: 'pondicherry', keywords: ['pondicherry', 'puducherry', 'auroville', 'white town', 'promenade beach'] },
+  { id: 'darjeeling', keywords: ['darjeeling', 'tiger hill', 'batasia loop', 'ghoom', 'glenary'] },
+  { id: 'kyoto', keywords: ['kyoto', 'japan', 'fushimi inari', 'arashiyama', 'gion', 'kinkaku'] },
+  { id: 'santorini', keywords: ['santorini', 'greece', 'oia', 'fira', 'caldera', 'aegean'] },
+  { id: 'reykjavik', keywords: ['reykjavik', 'iceland', 'blue lagoon', 'golden circle', 'aurora'] },
+  { id: 'bali', keywords: ['bali', 'indonesia', 'ubud', 'uluwatu', 'canggu', 'tanah lot'] }
+];
 
 /**
- * Editorial fallback knowledge engine for destinations
+ * Detects destination ID from natural user text
  */
-const EDITORIAL_KNOWLEDGE = {
-  kyoto: {
-    duration: 'We recommend 4 to 6 days to truly absorb Kyoto’s contemplative cadence without rushing between temple districts.',
-    firstSeen: 'Begin at dawn at Fushimi Inari Taisha (06:30 AM) before the world stirs, then wander into the moss sanctuaries of Higashiyama.',
-    bestSeason: 'Late March to mid-April for ephemeral sakura blossom, or November when Japanese maple leaves ignite temple ponds in crimson.',
-    avoid: 'Avoid visiting Arashiyama and Kiyomizu-dera during peak midday tourist buses (11:00 to 15:00). Never chase Maiko or photograph private residences in Gion.',
-    overview: 'Kyoto is the spiritual heart of Japan, preserving over 1,200 years of imperial architecture, zen gardens, and kaiseki culinary traditions.'
-  },
-  santorini: {
-    duration: '3 to 5 days is ideal—allowing time to sail the caldera, hike the cliff trails, and unwind in volcanic vineyard estates.',
-    firstSeen: 'Hike the caldera footpath from Imerovigli to Oia in the late afternoon, arriving just as the Aegean cobalt gives way to amber twilight.',
-    bestSeason: 'May to June or September to October, when the sea is warm, winds are balmy, and the summer crowds have dispersed.',
-    avoid: 'Avoid high midday sun in July/August without sun protection. Don’t climb onto private cycladic church domes or private cave roof gardens.',
-    overview: 'Santorini is a dramatic geological wonder perched on 300-meter volcanic cliffs overlooking the submerged caldera.'
-  },
-  reykjavik: {
-    duration: '5 to 7 days provides time to explore Reykjavik’s design scene, traverse the Golden Circle, and venture into south coast waterfalls.',
-    firstSeen: 'The geothermal waters of the Sky Lagoon or Blue Lagoon, followed by an evening aurora expedition away from city glow.',
-    bestSeason: 'October to March for dancing Aurora Borealis; June and July for 24-hour Midnight Sun adventures.',
-    avoid: 'Never drive off designated gravel roads—the sub-arctic moss takes decades to regenerate. Avoid ignoring maritime weather warnings.',
-    overview: 'Iceland is the land of primordial elements: geothermal lagoons, tectonic continental rifts, and dancing celestial lights.'
-  },
-  'cape-town': {
-    duration: '5 to 7 days to combine Table Mountain summits, Cape Winelands tastings, and coastal penguin encounters.',
-    firstSeen: 'Table Mountain’s summit plateau via the revolving cableway on the first crystal-clear morning you have.',
-    bestSeason: 'December to March for Mediterranean warmth and beach life; September to November for southern right whale watching.',
-    avoid: 'Don’t hike Table Mountain alone or without warm layers—the infamous "tablecloth" cloud causes sudden temperature drops.',
-    overview: 'Cape Town is where two majestic oceans meet towering sandstone crags, home to the world’s most biodiverse floral kingdom.'
-  },
-  udaipur: {
-    duration: '3 to 4 days is sufficient to tour the marble palaces, enjoy sunset boat cruises, and wander the historic artisan quarters.',
-    firstSeen: 'A late afternoon boat cruise across Lake Pichola as the marble facades of the City Palace catch the golden hour light.',
-    bestSeason: 'October to March when Rajasthan enjoys dry, breezy, pleasant winter weather.',
-    avoid: 'Avoid peak afternoon heat between 13:00 and 16:00. Dress with modesty when entering Jagdish Temple and old quarter shrines.',
-    overview: 'Udaipur is Rajasthan’s romantic jewel of the lakes, surrounded by the ancient Aravalli Range and royal Mewar heritage.'
-  },
-  lisbon: {
-    duration: '3 to 4 days allows you to navigate the seven hills, historic Belém, and take a day trip to the romantic palaces of Sintra.',
-    firstSeen: 'Miradouro de Santa Luzia at dawn overlooking the tiled roofs of Alfama down to the glittering Tagus estuary.',
-    bestSeason: 'April to June and September to October for gentle Atlantic breezes, jacaranda blossoms, and alfresco dining.',
-    avoid: 'Avoid wearing smooth-soled shoes on Lisbon’s slick calçada limestone pavements. Avoid boarding Tram 28 at midday peak lines.',
-    overview: 'Lisbon is the sun-drenched capital of seven hills, melancholic Fado melodies, ornate azulejo tiles, and maritime legacy.'
-  },
-  bali: {
-    duration: '7 to 10 days to divide your stay between Ubud’s cultural rainforests and Uluwatu’s dramatic clifftop coasts.',
-    firstSeen: 'The Jatiluwih UNESCO rice terraces early in the morning before tropical midday humidity rises.',
-    bestSeason: 'May to September during the dry season, featuring cool coastal breezes and crystal-clear dive conditions.',
-    avoid: 'Never step directly onto canang sari (daily woven palm offerings on sidewalks). Always wear a sarong and sash at sacred temples.',
-    overview: 'Bali is Indonesia’s Island of the Gods, blending volcanic landscapes, ancient Subak irrigation, and living Hindu spiritual rituals.'
-  },
-  'swiss-alps': {
-    duration: '5 to 7 days to ride panoramic alpine rail lines and hike high-altitude glacial passes.',
-    firstSeen: 'The Matterhorn Glacier Paradise cableway early in the morning for 360-degree views of 38 alpine peaks.',
-    bestSeason: 'January to March for premier powder snow and skiing; July to September for wildflower alpine meadows and crystal lakes.',
-    avoid: 'Don’t attempt alpine trails without proper mountain boots and weather checks—high-altitude conditions shift rapidly.',
-    overview: 'The Swiss Alps represent European alpine majesty, with razor-sharp granite peaks, timeless wooden chalets, and precision rail journeys.'
+export function detectDestinationFromQuery(text, fallbackId = 'goa') {
+  if (!text) return fallbackId;
+  const lower = text.toLowerCase();
+
+  for (const item of DESTINATION_ALIASES) {
+    for (const kw of item.keywords) {
+      // Word boundary or containment check
+      const regex = new RegExp(`\\b${kw}\\b`, 'i');
+      if (regex.test(lower) || lower.includes(kw)) {
+        return item.id;
+      }
+    }
   }
-};
+
+  return fallbackId;
+}
 
 /**
- * Ask AERORA Guide travel assistant
+ * Retrieve guide data for a specific destination
  */
-export async function askAIGuide(prompt, destinationId = 'kyoto') {
+export function getDestinationGuide(destId) {
+  if (!destId) return DESTINATION_GUIDE_DATA.goa;
+  const direct = DESTINATION_GUIDE_DATA[destId];
+  if (direct) return direct;
+
+  // Search by partial match or fallback
+  const found = Object.values(DESTINATION_GUIDE_DATA).find(
+    d => d.id === destId || d.name.toLowerCase().includes(destId.toLowerCase())
+  );
+
+  return found || DESTINATION_GUIDE_DATA.goa;
+}
+
+/**
+ * Main AI Guide Consultation entry point
+ * Returns structured result: { text: string, destinationCard: object, detectedDestId: string }
+ */
+export async function askAIGuide(prompt, contextDestinationId = 'goa') {
+  // 1. Detect if the user mentioned a specific destination in their query
+  const detectedDestId = detectDestinationFromQuery(prompt, contextDestinationId);
+  const guideData = getDestinationGuide(detectedDestId);
+  const destination = DESTINATIONS.find(d => d.id === detectedDestId) || { name: guideData.name, country: 'India' };
+
   const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-  const destination = DESTINATIONS.find(d => d.id === destinationId) || DESTINATIONS[0];
 
   if (apiKey) {
     try {
-      const systemContext = `You are KALAIURA Guide, an elite editorial travel concierge and cultural curator.
-Destination: ${destination.name}, ${destination.country}
-Climate: ${destination.climate}
-Atmosphere: Editorial, sophisticated, evocative, sensory, and concise. Avoid generic tourist clichés. Speak with the authority and poetic elegance of a luxury travel magazine editor. Limit responses to 2-3 evocative paragraphs with actionable insight.`;
+      const systemContext = `You are KALAIURA Guide, an elite personal travel assistant and cultural concierge.
+Current Destination: ${guideData.name} (${guideData.state})
+Category: ${guideData.category}
+Known Top Places: ${guideData.topPlaces.join(', ')}
+Known Must-Try Foods: ${guideData.mustTryFood.join(', ')}
+Best Time: ${guideData.bestTime}
+Suggested Plan: ${guideData.suggestedPlan}
+
+Provide a visually structured, place-specific response tailored to the question.
+If the user asks a general question or "tell me about [place]", format the response clearly with:
+* 📍 ${guideData.name}
+* 🏝️ Top Places: ${guideData.topPlaces.slice(0, 4).join(', ')}
+* 🍴 Must Try: ${guideData.mustTryFood.slice(0, 4).join(', ')}
+* 🗓️ Best Time: ${guideData.bestTime}
+* 🎯 Best For: ${guideData.bestFor}
+* 🧭 Suggested Plan: ${guideData.suggestedPlan}
+
+Follow with 1-2 evocative, insightful paragraphs. Keep responses engaging and directly actionable.`;
 
       const response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
@@ -101,186 +129,206 @@ Atmosphere: Editorial, sophisticated, evocative, sensory, and concise. Avoid gen
 
       if (response.ok) {
         const data = await response.json();
-        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-        if (text) return text;
+        const geminiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (geminiText) {
+          const result = new String(geminiText);
+          result.text = geminiText;
+          result.destinationCard = guideData;
+          result.detectedDestId = detectedDestId;
+          return result;
+        }
       }
     } catch (err) {
-      console.warn('AERORA AI Service: Gemini API unavailable, engaging editorial knowledge base', err);
+      console.warn('KALAIURA AI: Gemini API unavailable, using place-specific knowledge engine', err);
     }
   }
 
-  // Graceful fallback with intelligent editorial response matching
-  return generateEditorialResponse(prompt, destination);
+  // 2. High-precision place-specific editorial knowledge generator
+  const generatedText = generatePlaceSpecificResponse(prompt, guideData, destination);
+
+  // Return enhanced string object for full backward compatibility
+  const result = new String(generatedText);
+  result.text = generatedText;
+  result.destinationCard = guideData;
+  result.detectedDestId = detectedDestId;
+  return result;
 }
 
 /**
- * Intelligent editorial response generator when offline or without API key
+ * Generates tailored place-specific responses based on user query intent
  */
-function generateEditorialResponse(prompt, destination) {
+function generatePlaceSpecificResponse(prompt, guide, _destination) {
   const lower = prompt.toLowerCase();
-  const info = EDITORIAL_KNOWLEDGE[destination.id] || EDITORIAL_KNOWLEDGE.kyoto;
+  const name = guide.name;
 
-  if (lower.includes('how many days') || lower.includes('duration') || lower.includes('how long')) {
-    return `${info.duration} For ${destination.name}, a rushed itinerary diminishes the poetic essence of the location. Allow unscripted hours for contemplation and spontaneous wandering.`;
+  // Intent A: "What can I do in [place]?" / "Things to do" / "Activities"
+  if (lower.includes('what can i do') || lower.includes('things to do') || lower.includes('activities') || lower.includes('what to do')) {
+    return `Here are the top curated experiences and things to do in ${name}:
+
+• ${guide.thingsToDo[0] || 'Explore iconic local landmarks at morning golden hour'}
+• ${guide.thingsToDo[1] || 'Sample authentic regional culinary specialties'}
+• ${guide.thingsToDo[2] || 'Experience panoramic vistas and nature trails'}
+• ${guide.thingsToDo[3] || 'Immerse in local living heritage and artisan markets'}
+• ${guide.thingsToDo[4] || 'Relax with sunset views by local waters or viewpoints'}
+• ${guide.thingsToDo[5] || 'Discover off-map cultural quarters and quiet streets'}
+
+💡 Travel Tip: ${guide.travelTips[0]}
+
+Would you like me to structure a customized day-by-day plan for ${name}?`;
   }
 
-  if (lower.includes('first') || lower.includes('start') || lower.includes('must see') || lower.includes('priority')) {
-    return `Without hesitation, make your first pilgrimage to ${info.firstSeen}. Arriving during off-peak lighting transforms an ordinary tourist sight into a profound sensory memory.`;
+  // Intent B: "Plan a 3-day [place] trip" / "Itinerary" / "Plan"
+  if (lower.includes('plan') || lower.includes('itinerary') || lower.includes('3-day') || lower.includes('5-day') || lower.includes('days trip')) {
+    if (guide.itinerary3Day && guide.itinerary3Day.length > 0) {
+      const it = guide.itinerary3Day;
+      return `Here is your curated 3-Day / 2-Night Expedition Architecture for ${name}:
+
+🗓️ Day 1 — ${it[0].title}
+${it[0].plan}
+
+🗓️ Day 2 — ${it[1].title}
+${it[1].plan}
+
+🗓️ Day 3 — ${it[2] ? it[2].title : 'Leisure & Departure'}
+${it[2] ? it[2].plan : 'Savor a relaxed local breakfast, souvenir shopping for authentic crafts, and departure.'}
+
+🧭 Suggested Pace: ${guide.suggestedPlan}
+💡 Travel Tip: ${guide.travelTips[1] || guide.travelTips[0]}
+
+You can also launch our interactive Trip Planner to customize this itinerary day by day!`;
+    }
   }
 
-  if (lower.includes('when') || lower.includes('best time') || lower.includes('season') || lower.includes('weather')) {
-    return `The optimal window for ${destination.name} is ${info.bestSeason}. The climate aligns harmoniously with outdoor exploration, casting dramatic light across the landscape.`;
+  // Intent C: "Best places to visit in [place]?" / "Top places" / "Attractions" / "Sightseeing"
+  if (lower.includes('best places') || lower.includes('top places') || lower.includes('attractions') || lower.includes('sightseeing') || lower.includes('what should i see')) {
+    return `Here are the unmissable places to visit in ${name}:
+
+🏝️ Top Attractions:
+${guide.topPlaces.map(p => `• ${p}`).join('\n')}
+
+🎯 Best For: ${guide.bestFor}
+🗓️ Best Time: ${guide.bestTime}
+
+💡 Local Recommendation: ${guide.travelTips[0]}
+
+Click any of the suggested prompts below to explore dining or day-by-day itineraries for ${name}!`;
   }
 
-  if (lower.includes('avoid') || lower.includes('mistake') || lower.includes('don\'t') || lower.includes('scam')) {
-    return `To preserve the sanctity of your voyage: ${info.avoid} Respecting local customs and spatial etiquette elevates your relationship with the place from visitor to welcomed guest.`;
+  // Intent D: "What food should I try in [place]?" / "Food" / "Eat" / "Cuisine" / "Dish"
+  if (lower.includes('food') || lower.includes('eat') || lower.includes('cuisine') || lower.includes('dish') || lower.includes('must try') || lower.includes('taste')) {
+    return `Here are the iconic culinary masterpieces you must experience in ${name}:
+
+🍴 Signature Delicacies:
+${guide.mustTryFood.map(f => `• ${f}`).join('\n')}
+
+💡 Dining Note: Authentic regional recipes are best savored at family-run heritage eateries and local culinary institutions. Pair your meals with regional fresh juices, teas, or cool herbal infusions for the complete sensory experience.`;
   }
 
-  if (lower.includes('plan') || lower.includes('itinerary') || lower.includes('5-day') || lower.includes('3-day')) {
-    return `For ${destination.name}, a refined journey moves between architectural heritage, sensory culinary rituals, and untouched nature. We recommend structuring mornings around historic sanctuaries, afternoons in quiet tea houses or galleries, and evenings savoring regional vintages as the sun descends.`;
+  // Intent E: "Which places are good for a family trip?" / "Family" / "Kids"
+  if (lower.includes('family') || lower.includes('kids') || lower.includes('children')) {
+    return `For families exploring ${name}, here are our curated recommendations:
+
+👨‍👩‍👧 Family Travel Highlights:
+${guide.familyRecommendations}
+
+🧭 Pacing & Comfort:
+We recommend planning for ${guide.approxDuration || '3–4 days'} to allow comfortable travel pacing without rushing between sites. ${guide.travelTips[0]}`;
   }
 
-  return `${info.overview} When exploring ${destination.name}, pay close attention to the subtle textures—the sound of footsteps on ancient stone, the scent of local flora, and the warm hospitality of generational craftsmen. How else may I assist your voyage?`;
+  // Intent F: "Couples" / "Romantic" / "Honeymoon"
+  if (lower.includes('couple') || lower.includes('romantic') || lower.includes('honeymoon')) {
+    return `For couples seeking an intimate and memorable voyage to ${name}:
+
+💑 Romantic Experiences:
+${guide.coupleRecommendations}
+
+🗓️ Ideal Window: ${guide.bestTime}
+🧭 Suggested Stay: ${guide.suggestedPlan}`;
+  }
+
+  // Intent G: "Best time to visit" / "Weather" / "Season" / "When"
+  if (lower.includes('best time') || lower.includes('when') || lower.includes('weather') || lower.includes('season') || lower.includes('climate') || lower.includes('month')) {
+    return `The optimal time to visit ${name} is ${guide.bestTime}.
+
+During this period:
+• Weather: Optimal temperatures for outdoor exploration and sightseeing.
+• Vistas: Clear skies casting dramatic golden hour light across the landscapes.
+• Pacing: Ideal for a ${guide.suggestedPlan}.
+
+💡 Packing Advice: ${guide.travelTips[2] || guide.travelTips[0]}`;
+  }
+
+  // Intent H: General Query / "Tell me about [place]" / Direct Destination Information Card
+  return `* 📍 ${guide.name}
+* 🏝️ Top Places: ${guide.topPlaces.slice(0, 4).join(', ')}
+* 🍴 Must Try: ${guide.mustTryFood.slice(0, 3).join(', ')}
+* 🗓️ Best Time: ${guide.bestTime}
+* 🎯 Best For: ${guide.bestFor}
+* 🧭 Suggested Plan: ${guide.suggestedPlan}
+
+Welcome to ${guide.name}—${guide.tagline}. Whether you are drawn by its iconic landmarks, regional delicacies, or tranquil natural retreats, ${name} offers profound depth for travelers who value intentional exploration.
+
+How may I assist your voyage to ${name} further?`;
 }
 
 /**
- * AI Structured Itinerary Generator
- * Produces structured day-by-day itineraries
+ * AI Structured Itinerary Generator for Planner
  */
 export async function generateStructuredItinerary({
-  destinationId = 'kyoto',
+  destinationId = 'goa',
   durationDays = 3,
-  travelStyle = 'Culture',
-  budget = 'Premium',
+  _travelStyle = 'Culture',
+  _budget = 'Premium',
   pace = 'Balanced',
-  interests = []
+  _interests = []
 }) {
-  const dest = DESTINATIONS.find(d => d.id === destinationId) || DESTINATIONS[0];
-  const destPlaces = PLACES.filter(p => p.destinationId === dest.id);
+  const guide = getDestinationGuide(destinationId);
+  const destPlaces = PLACES.filter(p => p.destinationId === destinationId);
 
-  const apiKey = import.meta.env.VITE_GEMINI_API_KEY;
-
-  if (apiKey) {
-    try {
-      const prompt = `Generate a structured, elegant ${durationDays}-day travel itinerary for ${dest.name}, ${dest.country}.
-Travel Style: ${travelStyle}, Pace: ${pace}, Budget: ${budget}, Interests: ${interests.join(', ') || 'Culture, Architecture'}.
-Return ONLY a valid JSON array of days. Do not include markdown code block backticks.
-Schema:
-[
-  {
-    "dayNumber": 1,
-    "theme": "Arrival & Historic Immersion",
-    "schedule": [
-      {
-        "time": "09:00",
-        "activity": "Activity Name",
-        "location": "Specific Location",
-        "explanation": "2 sentence elegant description",
-        "duration": "2 Hours"
-      }
-    ]
-  }
-]`;
-
-      const response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
-        }
-      );
-
-      if (response.ok) {
-        const data = await response.json();
-        let rawText = data.candidates?.[0]?.content?.parts?.[0]?.text?.trim();
-        if (rawText) {
-          // Clean possible markdown code fences
-          rawText = rawText.replace(/^```json\s*/, '').replace(/^```\s*/, '').replace(/\s*```$/, '');
-          const parsed = JSON.parse(rawText);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            return parsed;
-          }
-        }
-      }
-    } catch (err) {
-      console.warn('AERORA AI: Gemini Itinerary parsing failed, using curated generator', err);
-    }
-  }
-
-  // Graceful Algorithmic Itinerary Generator
-  return buildCuratedItinerary(dest, durationDays, travelStyle, pace, destPlaces);
-}
-
-/**
- * Algorithmic generator producing exquisite structured day plans
- */
-function buildCuratedItinerary(destination, daysCount, style, pace, places) {
   const days = [];
-  const totalDays = Math.min(Math.max(Number(daysCount) || 3, 1), 14);
-
-  const themes = [
-    'Arrival & First Impressions',
-    'Sacred Architecture & Living Heritage',
-    'Culinary Traditions & Old Quarter Wandering',
-    'Elemental Horizons & Natural Solitude',
-    'Contemporary Art & Hidden Sanctuaries',
-    'Panoramas & Golden Hour Farewell',
-    'Artisan Crafts & Slow Contemplation'
-  ];
+  const totalDays = Math.min(Math.max(Number(durationDays) || 3, 1), 14);
 
   for (let i = 1; i <= totalDays; i++) {
-    const theme = themes[(i - 1) % themes.length];
-    const place = places[(i - 1) % (places.length || 1)] || {
-      name: `${destination.name} Heritage Quarter`,
-      location: destination.name,
+    const dayPlace = destPlaces[(i - 1) % (destPlaces.length || 1)] || {
+      name: guide.topPlaces[(i - 1) % guide.topPlaces.length] || `${guide.name} Heritage Quarter`,
+      location: guide.name,
       recommendedDuration: '2.5 Hours'
     };
 
-    const schedule = [];
-
-    // Morning
-    schedule.push({
-      time: pace === 'Slow' ? '10:00' : '08:30',
-      activity: `Dawn Exploration of ${place.name}`,
-      location: place.location,
-      explanation: `Begin in quiet morning light before crowds gather. Absorb the architectural contours and tranquil surroundings.`,
-      duration: place.recommendedDuration || '2 Hours'
-    });
-
-    // Midday / Lunch
-    schedule.push({
-      time: '12:30',
-      activity: `Seasonal ${style} Gastronomy Tasting`,
-      location: `Central ${destination.name}`,
-      explanation: `Enjoy an unhurried regional meal emphasizing seasonal ingredients and local culinary heritage.`,
-      duration: '1.5 Hours'
-    });
-
-    // Afternoon
-    if (pace !== 'Slow') {
-      const nextPlace = places[i % (places.length || 1)] || place;
-      schedule.push({
-        time: '15:00',
-        activity: `Discovery of ${nextPlace.name}`,
-        location: nextPlace.location,
-        explanation: `Experience the evocative textures and curated exhibits in the heart of the district.`,
-        duration: nextPlace.recommendedDuration || '2 Hours'
-      });
-    }
-
-    // Evening
-    schedule.push({
-      time: '18:30',
-      activity: 'Golden Hour Vista & Twilight Dining',
-      location: `${destination.name} Panoramic Overlook`,
-      explanation: `Watch twilight settle over the city with regional wine and ambient local music.`,
-      duration: '2.5 Hours'
-    });
+    const schedule = [
+      {
+        time: pace === 'Slow' ? '10:00' : '08:30',
+        activity: `Morning Exploration of ${dayPlace.name}`,
+        location: dayPlace.location || guide.name,
+        explanation: `Begin in soft morning light before crowds gather. Experience the unique architectural contours and serene atmosphere.`,
+        duration: '2.5 Hours'
+      },
+      {
+        time: '12:30',
+        activity: `Authentic ${guide.name} Gastronomy Lunch`,
+        location: `Central ${guide.name}`,
+        explanation: `Enjoy unhurried regional specialties including ${guide.mustTryFood[i % guide.mustTryFood.length] || 'local culinary delicacies'}.`,
+        duration: '1.5 Hours'
+      },
+      {
+        time: '15:30',
+        activity: `Discovery of ${guide.topPlaces[(i + 1) % guide.topPlaces.length] || 'Scenic Viewpoint'}`,
+        location: guide.name,
+        explanation: `Immerse in the sensory depth and cultural heritage of the area.`,
+        duration: '2 Hours'
+      },
+      {
+        time: '18:30',
+        activity: 'Golden Hour Vista & Twilight Gathering',
+        location: `${guide.name} Sunset Point`,
+        explanation: `Watch twilight settle over the landscape with evening refreshments and local music.`,
+        duration: '2 Hours'
+      }
+    ];
 
     days.push({
       dayNumber: i,
-      theme,
+      theme: `${dayPlace.name} & Surrounds`,
       schedule
     });
   }

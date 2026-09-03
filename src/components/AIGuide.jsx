@@ -1,23 +1,16 @@
 /* ==============================================================================
-   AERORA — AI TRAVEL GUIDE ("AERORA GUIDE")
-   Conversational travel assistant with contextual destination intelligence & landmark cards
+   KALAIURA — AI TRAVEL GUIDE (PERSONAL TRAVEL ASSISTANT)
+   Place-specific travel intelligence, dynamic destination switching,
+   curated assistant panels, and authentic Indian & global travel guidance.
    ============================================================================== */
 
 import React, { useState, useRef, useEffect } from 'react';
 import { DESTINATIONS } from '../data/destinations';
 import { PLACES } from '../data/places';
-import { askAIGuide } from '../services/ai';
+import { askAIGuide, getDestinationGuide } from '../services/ai';
 import { ChatMessage } from './ChatMessage';
 import { Icon } from './Icons';
 import { useJourneyContext } from '../context/JourneyContext';
-
-const SUGGESTED_QUESTIONS = [
-  'How many days should I spend here?',
-  'What should I see first?',
-  'When is the best time to visit?',
-  'What should I avoid?',
-  'Plan a 5-day trip for me.'
-];
 
 let globalMsgCounter = 0;
 function nextMsgId(prefix = 'msg') {
@@ -25,7 +18,7 @@ function nextMsgId(prefix = 'msg') {
   return `${prefix}-${globalMsgCounter}`;
 }
 
-export function AIGuide({ initialDestinationId = 'kyoto' }) {
+export function AIGuide({ initialDestinationId = 'goa' }) {
   const [selectedDestId, setSelectedDestId] = useState(initialDestinationId);
   const [inputQuery, setInputQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,38 +26,52 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
   const { addPlace, hasPlace } = useJourneyContext();
 
   const selectedDestination = DESTINATIONS.find((d) => d.id === selectedDestId) || DESTINATIONS[0];
+  const initialGuideData = getDestinationGuide(selectedDestId);
   const destinationLandmarks = PLACES.filter((p) => p.destinationId === selectedDestination.id);
+
+  // Dynamic place-specific suggested questions
+  const suggestedQuestions = [
+    `What can I do in ${selectedDestination.name}?`,
+    `Plan a 3-day ${selectedDestination.name} trip`,
+    `Best places to visit in ${selectedDestination.name}?`,
+    `What food should I try in ${selectedDestination.name}?`,
+    `Is ${selectedDestination.name} good for a family trip?`,
+    `What is the best time to visit ${selectedDestination.name}?`
+  ];
 
   const [messages, setMessages] = useState(() => [
     {
       id: 'init-1',
       sender: 'ai',
-      text: `Greetings. I am KALAIURA Guide, your cultural intelligence curator for ${selectedDestination.name}, ${selectedDestination.country}. Ask me about sacred architectural timings, off-map dining sanctuaries, or optimal seasonal windows. What would you like to uncover?`,
+      text: `Greetings. I am your KALAIURA Personal Travel Assistant for ${initialGuideData.name}. Here is your instant expedition overview:`,
+      destinationCard: initialGuideData,
       timestamp: 'Just now'
     }
   ]);
 
   const chatStreamRef = useRef(null);
 
-  // Auto-scroll the internal chat messages stream container ONLY (never affects page window scroll)
+  // Auto-scroll the internal chat stream container ONLY (never jumps parent page window)
   useEffect(() => {
     if (chatStreamRef.current) {
       chatStreamRef.current.scrollTop = chatStreamRef.current.scrollHeight;
     }
   }, [messages, isLoading]);
 
-  // Handle destination switch
+  // Handle destination switch from dropdown
   const handleDestinationChange = (newDestId) => {
     setSelectedDestId(newDestId);
-    const newDest = DESTINATIONS.find((d) => d.id === newDestId) || DESTINATIONS[0];
+    const newGuide = getDestinationGuide(newDestId);
     const newId = nextMsgId('dest');
     const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
     setMessages((prev) => [
       ...prev,
       {
         id: newId,
         sender: 'ai',
-        text: `Now attuned to ${newDest.name}, ${newDest.country} (${newDest.climate} climate). How may I illuminate your expedition here?`,
+        text: `Now attuned to ${newGuide.name}. Here are the essential attractions, culinary highlights, and optimal travel window for your voyage:`,
+        destinationCard: newGuide,
         timestamp: timeStr
       }
     ]);
@@ -90,26 +97,33 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
     setErrorMessage(null);
 
     try {
-      const aiReply = await askAIGuide(textToSend, selectedDestId);
+      const replyObj = await askAIGuide(textToSend, selectedDestId);
       const aiMsgId = nextMsgId('ai');
       const aiTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+      // If user query mentioned a different destination, update the dropdown context
+      if (replyObj.detectedDestId && replyObj.detectedDestId !== selectedDestId) {
+        setSelectedDestId(replyObj.detectedDestId);
+      }
 
       const aiMessage = {
         id: aiMsgId,
         sender: 'ai',
-        text: aiReply,
+        text: replyObj.text || String(replyObj),
+        destinationCard: replyObj.destinationCard || null,
         timestamp: aiTime
       };
+
       setMessages((prev) => [...prev, aiMessage]);
     } catch (err) {
-      console.warn('AERORA Guide error:', err);
-      setErrorMessage('Your guide is temporarily offline. Calibrating connection.');
+      console.warn('KALAIURA Guide error:', err);
+      setErrorMessage('Your assistant is temporarily reconnecting.');
       const fallbackId = nextMsgId('err');
       const fallbackTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
       const fallbackMsg = {
         id: fallbackId,
         sender: 'ai',
-        text: `Your guide is temporarily offline. While our neural connection recalibrates, consider visiting ${selectedDestination.name}’s iconic quarters early in the morning for serene contemplation.`,
+        text: `While our connection refreshes, explore ${selectedDestination.name}’s top attractions or sample regional delicacies.`,
         timestamp: fallbackTime
       };
       setMessages((prev) => [...prev, fallbackMsg]);
@@ -121,11 +135,14 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
   const clearConversation = () => {
     const clearId = nextMsgId('clear');
     const clearTime = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    const guide = getDestinationGuide(selectedDestId);
+
     setMessages([
       {
         id: clearId,
         sender: 'ai',
-        text: `Conversation cleared. Ready for your inquiries regarding ${selectedDestination.name}.`,
+        text: `Conversation cleared. I am ready for your questions about ${guide.name}.`,
+        destinationCard: guide,
         timestamp: clearTime
       }
     ]);
@@ -137,8 +154,8 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
       className="ai-guide-container"
       style={{
         backgroundColor: 'var(--surface-elevated)',
-        border: '1px solid var(--border)',
-        borderRadius: 'var(--radius-sm)',
+        border: '1px solid rgba(224, 162, 77, 0.25)',
+        borderRadius: '16px',
         display: 'flex',
         flexDirection: 'column',
         height: '680px',
@@ -151,7 +168,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         style={{
           padding: 'var(--space-md) var(--space-lg)',
           borderBottom: '1px solid var(--border)',
-          backgroundColor: 'rgba(8, 9, 12, 0.75)',
+          backgroundColor: 'rgba(8, 9, 12, 0.85)',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
@@ -161,22 +178,23 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
       >
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <Icon name="sparkles" size={16} style={{ color: 'var(--gold)' }} />
+            <span style={{ color: 'var(--gold)', fontSize: '1.1rem' }}>✦</span>
             <h3
               style={{
                 fontFamily: 'var(--font-accent)',
-                fontSize: '1.25rem',
+                fontSize: '1.2rem',
                 letterSpacing: '0.12em',
                 textTransform: 'uppercase',
                 fontWeight: '600',
-                color: 'var(--text-primary)'
+                color: 'var(--text-primary)',
+                margin: 0
               }}
             >
-              KALAIURA Guide
+              KALAIURA Travel Assistant
             </h3>
           </div>
-          <p style={{ fontSize: 'var(--text-xs)', color: 'var(--text-muted)' }}>
-            Ask the place anything.
+          <p style={{ fontSize: '0.74rem', color: 'var(--text-muted)', margin: '2px 0 0 0' }}>
+            Place-specific guidance, attractions, dining & itineraries.
           </p>
         </div>
 
@@ -186,17 +204,18 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
             className="input-field"
             value={selectedDestId}
             onChange={(e) => handleDestinationChange(e.target.value)}
-            aria-label="Select destination context for AI Guide"
+            aria-label="Select destination context for AI Assistant"
             style={{
               padding: '0.45rem 1.8rem 0.45rem 0.85rem',
               fontSize: 'var(--text-xs)',
               width: 'auto',
-              minWidth: '150px'
+              minWidth: '160px',
+              borderColor: 'rgba(224, 162, 77, 0.3)'
             }}
           >
             {DESTINATIONS.map((d) => (
               <option key={d.id} value={d.id}>
-                {d.name} ({d.country})
+                {d.name} ({d.country || 'India'})
               </option>
             ))}
           </select>
@@ -221,7 +240,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           borderBottom: '1px solid var(--border)',
           display: 'flex',
           alignItems: 'center',
-          gap: 'var(--space-xs)',
+          gap: '6px',
           overflowX: 'auto',
           whiteSpace: 'nowrap'
         }}
@@ -229,16 +248,16 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         <span style={{ fontSize: '0.68rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600' }}>
           Suggested:
         </span>
-        {SUGGESTED_QUESTIONS.map((q) => (
+        {suggestedQuestions.map((q, idx) => (
           <button
-            key={q}
+            key={idx}
             onClick={() => handleSendMessage(q)}
             disabled={isLoading}
             style={{
               padding: '0.3rem 0.75rem',
               borderRadius: 'var(--radius-full)',
-              backgroundColor: 'rgba(255, 255, 255, 0.03)',
-              border: '1px solid var(--border)',
+              backgroundColor: 'rgba(224, 162, 77, 0.06)',
+              border: '1px solid rgba(224, 162, 77, 0.2)',
               color: 'var(--text-secondary)',
               fontSize: 'var(--text-xs)',
               cursor: 'pointer',
@@ -246,10 +265,10 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = 'var(--gold)';
-              e.currentTarget.style.color = 'var(--text-primary)';
+              e.currentTarget.style.color = 'var(--gold)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'var(--border)';
+              e.currentTarget.style.borderColor = 'rgba(224, 162, 77, 0.2)';
               e.currentTarget.style.color = 'var(--text-secondary)';
             }}
           >
@@ -270,7 +289,11 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         }}
       >
         {messages.map((msg) => (
-          <ChatMessage key={msg.id} message={msg} />
+          <ChatMessage
+            key={msg.id}
+            message={msg}
+            onQuickAsk={handleSendMessage}
+          />
         ))}
 
         {/* Typing Indicator */}
@@ -316,15 +339,13 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
             {errorMessage}
           </div>
         )}
-
-        
       </div>
 
       {/* Destination Landmark Recommendations Quick-Drawer */}
       {destinationLandmarks.length > 0 && (
         <div
           style={{
-            padding: '0.65rem var(--space-lg)',
+            padding: '0.5rem var(--space-lg)',
             backgroundColor: 'rgba(8, 9, 12, 0.85)',
             borderTop: '1px solid var(--border)',
             display: 'flex',
@@ -335,7 +356,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           }}
         >
           <span style={{ fontSize: '0.68rem', color: 'var(--gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-            Curated Places:
+            Quick Places:
           </span>
           {destinationLandmarks.map((place) => {
             const isAdded = hasPlace(place.id);
@@ -347,7 +368,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.3rem 0.65rem',
+                  padding: '0.25rem 0.6rem',
                   borderRadius: 'var(--radius-xs)',
                   backgroundColor: isAdded ? 'rgba(224, 162, 77, 0.15)' : 'rgba(255, 255, 255, 0.04)',
                   border: isAdded ? '1px solid var(--gold)' : '1px solid var(--border)',
@@ -373,7 +394,7 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
         style={{
           padding: 'var(--space-md) var(--space-lg)',
           borderTop: '1px solid var(--border)',
-          backgroundColor: 'rgba(8, 9, 12, 0.9)',
+          backgroundColor: 'rgba(8, 9, 12, 0.95)',
           display: 'flex',
           alignItems: 'center',
           gap: 'var(--space-xs)'
@@ -384,10 +405,10 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           className="input-field"
           value={inputQuery}
           onChange={(e) => setInputQuery(e.target.value)}
-          placeholder={`Inquire about ${selectedDestination.name}...`}
+          placeholder={`Ask about ${selectedDestination.name} (e.g. "Top places", "Plan a 3-day trip", "Food to try")...`}
           aria-label={`Ask KALAIURA Guide about ${selectedDestination.name}`}
           disabled={isLoading}
-          style={{ flex: 1, padding: '0.75rem 1.15rem' }}
+          style={{ flex: 1, padding: '0.75rem 1.15rem', borderRadius: '10px' }}
         />
 
         <button
@@ -395,9 +416,9 @@ export function AIGuide({ initialDestinationId = 'kyoto' }) {
           disabled={!inputQuery.trim() || isLoading}
           className="btn btn-primary btn-sm"
           aria-label="Submit message"
-          style={{ padding: '0.75rem 1.25rem' }}
+          style={{ padding: '0.75rem 1.25rem', borderRadius: '10px' }}
         >
-          <span>Send</span>
+          <span>Ask</span>
           <Icon name="send" size={14} />
         </button>
       </form>

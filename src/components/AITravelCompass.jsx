@@ -8,6 +8,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Icon } from './Icons';
 import { EditorialImage } from './EditorialImage';
+import { DestinationAssistantCard } from './DestinationAssistantCard';
 import { INDIA_DESTINATIONS } from '../data/indiaDestinations';
 import { useJourneyContext } from '../context/JourneyContext';
 import { askAIGuide } from '../services/ai';
@@ -853,9 +854,17 @@ export function AITravelCompass() {
                 <Icon name="compass" size={14} />
                 <span>KALAIURA Guide Dispatch</span>
               </div>
-              <p style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 'var(--lh-relaxed)', margin: 0 }}>
-                {chatResponse}
-              </p>
+              <div style={{ fontSize: '0.88rem', color: 'var(--text-primary)', lineHeight: 'var(--lh-relaxed)', margin: 0, whiteSpace: 'pre-line' }}>
+                {chatResponse.text || String(chatResponse)}
+              </div>
+              {chatResponse.destinationCard && (
+                <div style={{ marginTop: 'var(--space-md)' }}>
+                  <DestinationAssistantCard
+                    data={chatResponse.destinationCard}
+                    onQuickAsk={(q) => { setConversationalQuery(q); handleAskCustom(q); }}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
