@@ -75,7 +75,7 @@ export function FloatingAIGuide() {
             className="floating-ai-drawer"
             style={{
               width: '100%',
-              maxWidth: '580px',
+              maxWidth: 'var(--drawer-max-width, 580px)',
               height: '100%',
               backgroundColor: '#0a0c11',
               borderLeft: '1px solid rgba(224, 162, 77, 0.3)',

@@ -165,7 +165,7 @@ export function Navbar() {
             {/* Location & Weather Chip */}
             <button
               onClick={openLocationSelector}
-              className="btn-ghost"
+              className="btn-ghost nav-location-desktop"
               title="Change your departure coordinates"
               aria-label={`Current location: ${currentLocation.name}. Click to change.`}
               style={{
@@ -338,6 +338,23 @@ export function Navbar() {
           </div>
 
           {/* Nav Links Stack */}
+          
+            {/* Mobile Location Selector Strip */}
+            <div style={{ padding: 'var(--space-md) 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: 'var(--space-lg)' }}>
+              <button
+                onClick={() => { openLocationSelector(); setIsMobileMenuOpen(false); }}
+                className="btn btn-secondary btn-sm mobile-menu-location-chip"
+                style={{ width: '100%', justifyContent: 'space-between' }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <Icon name="map-pin" size={14} style={{ color: 'var(--gold)' }} />
+                  <span>{currentLocation.name}</span>
+                  {weather && <span style={{ color: 'var(--gold)' }}>· {weather.temp}°C</span>}
+                </div>
+                <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Change</span>
+              </button>
+            </div>
+
           <nav
             style={{
               display: 'flex',

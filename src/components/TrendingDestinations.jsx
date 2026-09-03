@@ -25,11 +25,7 @@ export function TrendingDestinations() {
       <div
         data-home-reveal
         data-home-reveal-delay="1"
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))',
-          gap: 'var(--space-xl)'
-        }}
+        className="india-cards-grid"
       >
         {trending.map((dest, idx) => (
           <IndiaCard key={dest.id} destination={dest} index={idx} />

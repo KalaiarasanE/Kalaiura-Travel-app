@@ -133,11 +133,7 @@ export function IndiaExplorer() {
         <div
           data-home-reveal
           data-home-reveal-delay="2"
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-            gap: 'var(--space-xl)'
-          }}
+          className="india-cards-grid"
         >
           {filteredDestinations.map((dest, idx) => (
             <IndiaCard key={dest.id} destination={dest} index={idx} />
