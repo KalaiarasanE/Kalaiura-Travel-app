@@ -279,17 +279,6 @@ The application incorporates a mobile-first responsive strategy across three pri
    npm install
    ```
 
-3. Configure environment variables (optional):
-   ```bash
-   cp .env.example .env
-   ```
-   Edit `.env` to add your live API keys:
-   ```env
-   VITE_OPENWEATHER_API_KEY=your_openweather_api_key
-   VITE_GEMINI_API_KEY=your_gemini_api_key
-   VITE_UNSPLASH_ACCESS_KEY=your_unsplash_access_key
-   ```
-   > *Note: AERORA runs fully out-of-the-box with built-in fallback engines even without API keys.*
 
 4. Start the local development server:
    ```bash
