@@ -1,7 +1,11 @@
 /* ==============================================================================
-   KALAIURA — FLAGSHIP HOME PAGE (INDIA DISCOVERY & AI INTELLIGENCE)
-   Near-black atmosphere, champagne gold accents, editorial bento,
-   India destination showcase, interactive AI Travel Compass, and progressive scroll reveals.
+   KALAIURA — FLAGSHIP LANDING PAGE
+   Clear 5-Section Architecture:
+   1. DISCOVER     (#discover)     — Hero & Telemetry
+   2. DESTINATIONS (#destinations) — Curated Indian & Global Sanctuaries
+   3. PLACES       (#places)       — Iconic Architectural Monuments
+   4. TRIP PLANNER (#planner)      — Bespoke Voyage Architect
+   5. AI GUIDE     (#ai-guide)     — Signature AI Travel Compass & Concierge
    ============================================================================== */
 
 import React, { useEffect } from 'react';
@@ -12,77 +16,89 @@ import { Hero } from '../components/Hero';
 import { StatsTicker } from '../components/StatsTicker';
 import { IndiaExplorer } from '../components/IndiaExplorer';
 import { IndiaBeyondObvious } from '../components/IndiaBeyondObvious';
-import { AITravelCompass } from '../components/AITravelCompass';
 import { TrendingDestinations } from '../components/TrendingDestinations';
+import { HomePlaces } from '../components/HomePlaces';
 import { BuildJourneyCTA } from '../components/BuildJourneyCTA';
+import { AITravelCompass } from '../components/AITravelCompass';
 import { TravelStories } from '../components/TravelStories';
 import { FinalCTA } from '../components/FinalCTA';
 
 export function Home() {
   const homeRef = useHomeMotion();
 
-  // Strict: Always start at top of homepage on load or reload
+  // Ensure initial load starts at top of homepage
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.scrollTo(0, 0);
     }
   }, []);
 
-  const scrollToIndiaExplorer = () => {
-    const el = document.getElementById('explore-india');
+  const scrollToSection = (sectionId) => {
+    const el = document.getElementById(sectionId);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
 
   return (
     <main ref={homeRef} className="home-page">
+      {/* 0-overhead sentinel for navbar scroll detection */}
+      <div id="top-sentinel" style={{ position: 'absolute', top: 0, left: 0, width: '1px', height: '30px', pointerEvents: 'none' }} />
+
       {/* Ambient Mouse-Follower Spotlight (Desktop Fine Pointer Only) */}
       <div className="home-ambient-spotlight" aria-hidden="true" />
 
       {/* Luxury Interactive Cursor Follower (Desktop Fine Pointer Only) */}
       <HomeCursor />
 
-      {/* 01 — HERO: GO WHERE YOUR CURIOSITY LEADS */}
-      <Hero onExploreClick={scrollToIndiaExplorer} />
+      {/* =========================================================================
+          SECTION 1: DISCOVER — HERO & TELEMETRY
+          ========================================================================= */}
+      <section id="discover" style={{ scrollMarginTop: 'var(--nav-height)' }}>
+        <Hero onExploreClick={() => scrollToSection('destinations')} />
+        <StatsTicker />
+      </section>
 
-      {/* Seamless Telemetry & Atmospheric Stats Ribbon */}
-      <StatsTicker />
-
-      {/* 02 — EXPLORE INDIA: Featured Indian Destinations & States */}
-      <div data-home-reveal>
+      {/* =========================================================================
+          SECTION 2: DESTINATIONS — CURATED SANCTUARIES & RETREATS
+          ========================================================================= */}
+      <section id="destinations" style={{ scrollMarginTop: 'var(--nav-height)' }}>
         <IndiaExplorer />
-      </div>
-
-      {/* 03 — INDIA, BEYOND THE OBVIOUS: Hidden & Rare Sanctuaries */}
-      <div data-home-reveal>
         <IndiaBeyondObvious />
-      </div>
-
-      {/* 04 — AI TRAVEL GUIDE: "YOUR JOURNEY, INTELLIGENTLY CURATED." */}
-      <div data-home-reveal>
-        <AITravelCompass />
-      </div>
-
-      {/* 05 — TRENDING DESTINATIONS: Seasonal High-Interest Sanctuaries */}
-      <div data-home-reveal>
         <TrendingDestinations />
-      </div>
+      </section>
 
-      {/* 06 — BUILD YOUR JOURNEY: Trip Planner Architecture CTA */}
-      <div data-home-reveal>
+      {/* =========================================================================
+          SECTION 3: PLACES — ICONIC ARCHITECTURAL & NATURAL MONUMENTS
+          ========================================================================= */}
+      <section id="places" style={{ scrollMarginTop: 'var(--nav-height)' }}>
+        <HomePlaces />
+      </section>
+
+      {/* =========================================================================
+          SECTION 4: TRIP PLANNER — VOYAGE ARCHITECT & CUSTOM ITINERARIES
+          ========================================================================= */}
+      <section id="planner" style={{ scrollMarginTop: 'var(--nav-height)' }}>
         <BuildJourneyCTA />
-      </div>
+      </section>
 
-      {/* 07 — TRAVEL STORIES / INSPIRATION: Memoirs & Cultural Dispatches */}
-      <div data-home-reveal>
+      {/* =========================================================================
+          SECTION 5: AI GUIDE — CONVERSATIONAL INTELLIGENCE & CONCIERGE
+          ========================================================================= */}
+      <section id="ai-guide" style={{ scrollMarginTop: 'var(--nav-height)' }}>
+        <AITravelCompass />
+      </section>
+
+      {/* =========================================================================
+          COMPLETION: TRAVEL STORIES & FINAL CURIOSITY CTA
+          ========================================================================= */}
+      <section id="stories" style={{ scrollMarginTop: 'var(--nav-height)' }}>
         <TravelStories />
-      </div>
+      </section>
 
-      {/* 08 — FINAL CTA: "WHERE WILL YOUR CURIOSITY TAKE YOU NEXT?" */}
-      <div data-home-reveal>
+      <section id="final-cta" style={{ scrollMarginTop: 'var(--nav-height)' }}>
         <FinalCTA />
-      </div>
+      </section>
     </main>
   );
 }

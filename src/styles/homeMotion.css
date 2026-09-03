@@ -1,3 +1,7 @@
+html {
+  scroll-behavior: smooth;
+}
+
 /* ==============================================================================
    KALAIURA — HOME PAGE MOTION & INTERACTION SYSTEM (MOTIONSITES AI ALIGNED)
    Scope: STRICTLY ISOLATED TO .home-page CONTAINER ONLY
@@ -35,7 +39,7 @@
   );
   opacity: 0;
   transition: opacity 1.2s var(--home-ease-smooth);
-  will-change: background;
+  
 }
 
 .home-page.has-pointer .home-ambient-spotlight {
@@ -95,49 +99,11 @@
 }
 
 /* -----------------------------------------------------------------------------
-   4. SCROLL-DRIVEN REVEAL ANIMATIONS (INTERSECTION OBSERVER)
+   4. SCROLL-DRIVEN REVEAL ANIMATIONS (IMMEDIATE & FLUID)
    ----------------------------------------------------------------------------- */
 .home-page [data-home-reveal] {
-  opacity: 0;
-  transform: translateY(32px);
-  transition: opacity 0.85s var(--home-ease-spring),
-              transform 0.85s var(--home-ease-spring);
-  will-change: opacity, transform;
-}
-
-.home-page [data-home-reveal].is-revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Staggered Reveal Delays */
-.home-page [data-home-reveal-delay="1"] { transition-delay: 0.08s; }
-.home-page [data-home-reveal-delay="2"] { transition-delay: 0.16s; }
-.home-page [data-home-reveal-delay="3"] { transition-delay: 0.24s; }
-.home-page [data-home-reveal-delay="4"] { transition-delay: 0.32s; }
-.home-page [data-home-reveal-delay="5"] { transition-delay: 0.40s; }
-.home-page [data-home-reveal-delay="6"] { transition-delay: 0.48s; }
-
-/* Scale Reveal Variant */
-.home-page [data-home-reveal="scale"] {
-  opacity: 0;
-  transform: scale(0.95) translateY(24px);
-}
-
-.home-page [data-home-reveal="scale"].is-revealed {
-  opacity: 1;
-  transform: scale(1) translateY(0);
-}
-
-/* Fade Down Variant */
-.home-page [data-home-reveal="fade-down"] {
-  opacity: 0;
-  transform: translateY(-20px);
-}
-
-.home-page [data-home-reveal="fade-down"].is-revealed {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: none !important;
 }
 
 /* -----------------------------------------------------------------------------

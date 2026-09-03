@@ -1,37 +1,137 @@
 /* ==============================================================================
-   AERORA — EDITORIAL NAVBAR (REFERENCE REDESIGN)
-   Transparent/near-black header, uppercase navigation, gold active indicators
+   KALAIURA — EDITORIAL NAVBAR WITH HIGH-PERFORMANCE SCROLL-SPY
+   5 Canonical Sections: DISCOVER, DESTINATIONS, PLACES, TRIP PLANNER, AI GUIDE
+   Fluid smooth navigation, active section indicator & zero-lag IntersectionObserver
    ============================================================================== */
 
 import React, { useState, useEffect } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { Icon } from './Icons';
 import { useLocation as useAppLocation } from '../hooks/useLocation';
 import { useJourneyContext } from '../context/JourneyContext';
 
+const NAV_LINKS = [
+  { label: 'DISCOVER', path: '/', sectionId: 'discover' },
+  { label: 'DESTINATIONS', path: '/destinations', sectionId: 'destinations' },
+  { label: 'PLACES', path: '/places', sectionId: 'places' },
+  { label: 'TRIP PLANNER', path: '/planner', sectionId: 'planner' },
+  { label: 'AI GUIDE', path: '/guide', sectionId: 'ai-guide' }
+];
+
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState('discover');
   const location = useLocation();
+  const navigate = useNavigate();
   const { currentLocation, weather, openLocationSelector } = useAppLocation();
   const { totalPlaces, toggleDrawer } = useJourneyContext();
 
-  // Handle scroll backdrop effect
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 30);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const isHomePage = location.pathname === '/';
 
-  const navLinks = [
-    { label: 'DISCOVER', path: '/' },
-    { label: 'DESTINATIONS', path: '/destinations' },
-    { label: 'PLACES', path: '/places' },
-    { label: 'TRIP PLANNER', path: '/planner' },
-    { label: 'AI GUIDE', path: '/guide' }
-  ];
+  // 1. Zero-lag header background detection via IntersectionObserver on #top-sentinel
+  useEffect(() => {
+    const sentinel = document.getElementById('top-sentinel');
+    if (sentinel && window.IntersectionObserver) {
+      const observer = new IntersectionObserver(
+        ([entry]) => {
+          setIsScrolled(!entry.isIntersecting);
+        },
+        { threshold: 0 }
+      );
+      observer.observe(sentinel);
+      return () => observer.disconnect();
+    } else {
+      // Fallback throttled listener
+      let ticking = false;
+      const onScroll = () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            setIsScrolled(window.scrollY > 30);
+            ticking = false;
+          });
+          ticking = true;
+        }
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+      return () => window.removeEventListener('scroll', onScroll);
+    }
+  }, [location.pathname]);
+
+  // 2. High-performance scroll-spy for the 5 landing-page sections (IntersectionObserver)
+  useEffect(() => {
+    if (!isHomePage || typeof window === 'undefined') return;
+
+    const sectionIds = ['discover', 'destinations', 'places', 'planner', 'ai-guide'];
+    const sectionElements = sectionIds
+      .map((id) => document.getElementById(id))
+      .filter(Boolean);
+
+    if (sectionElements.length === 0 || !window.IntersectionObserver) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        // Find visible section with highest intersection or top proximity
+        const visibleEntries = entries.filter((e) => e.isIntersecting);
+        if (visibleEntries.length > 0) {
+          // Sort by intersection ratio or boundingClientRect top
+          visibleEntries.sort((a, b) => b.intersectionRatio - a.intersectionRatio);
+          const topVisible = visibleEntries[0];
+          if (topVisible && topVisible.target.id) {
+            setActiveSection(topVisible.target.id);
+          }
+        }
+      },
+      {
+        root: null,
+        // Active zone across the upper-center viewport
+        rootMargin: '-15% 0px -45% 0px',
+        threshold: [0.1, 0.25, 0.5]
+      }
+    );
+
+    sectionElements.forEach((el) => observer.observe(el));
+
+    return () => observer.disconnect();
+  }, [isHomePage]);
+
+  // 3. Smooth, responsive navigation click handler
+  const handleNavClick = (e, link) => {
+    if (isHomePage) {
+      e.preventDefault();
+      setIsMobileMenuOpen(false);
+
+      if (link.sectionId === 'discover') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        setActiveSection('discover');
+        return;
+      }
+
+      const el = document.getElementById(link.sectionId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        setActiveSection(link.sectionId);
+      } else {
+        navigate(link.path);
+      }
+    } else {
+      setIsMobileMenuOpen(false);
+      // If navigating from another page to a section on home
+      if (link.path === '/') {
+        navigate('/');
+      } else {
+        navigate(link.path);
+      }
+    }
+  };
+
+  // Determine active state for each nav item
+  const isLinkActive = (link) => {
+    if (isHomePage) {
+      return activeSection === link.sectionId;
+    }
+    return location.pathname === link.path;
+  };
 
   return (
     <>
@@ -43,8 +143,8 @@ export function Navbar() {
           left: 0,
           right: 0,
           zIndex: 'var(--z-header)',
-          transition: 'background 0.35s ease, border-color 0.35s ease, backdrop-filter 0.35s ease',
-          background: isScrolled ? 'rgba(8, 9, 12, 0.92)' : 'linear-gradient(180deg, rgba(8, 9, 12, 0.75) 0%, transparent 100%)',
+          transition: 'background 0.3s ease, border-color 0.3s ease, backdrop-filter 0.3s ease',
+          background: isScrolled ? 'rgba(8, 9, 12, 0.94)' : 'linear-gradient(180deg, rgba(8, 9, 12, 0.8) 0%, transparent 100%)',
           backdropFilter: isScrolled ? 'blur(16px)' : 'none',
           WebkitBackdropFilter: isScrolled ? 'blur(16px)' : 'none',
           borderBottom: isScrolled ? '1px solid var(--border)' : '1px solid transparent'
@@ -60,9 +160,16 @@ export function Navbar() {
             gap: 'var(--space-md)'
           }}
         >
-          {/* AERORA Brand Wordmark (Clean & Transparent) */}
+          {/* KALAIURA Brand Wordmark (Clean & Transparent) */}
           <Link
             to="/"
+            onClick={(e) => {
+              if (isHomePage) {
+                e.preventDefault();
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                setActiveSection('discover');
+              }
+            }}
             style={{
               display: 'flex',
               flexDirection: 'column',
@@ -100,7 +207,7 @@ export function Navbar() {
             </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
+          {/* Desktop Navigation Links with Active Scroll Indicator */}
           <nav
             className="nav-desktop-links"
             aria-label="Primary Navigation"
@@ -110,32 +217,35 @@ export function Navbar() {
               gap: 'var(--space-xl)'
             }}
           >
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
+            {NAV_LINKS.map((link) => {
+              const active = isLinkActive(link);
               return (
-                <Link
-                  key={link.path}
-                  to={link.path}
+                <a
+                  key={link.label}
+                  href={isHomePage ? `#${link.sectionId}` : link.path}
+                  onClick={(e) => handleNavClick(e, link)}
                   style={{
                     fontSize: '0.8rem',
                     fontFamily: 'var(--font-body)',
                     letterSpacing: '0.14em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--gold)' : 'var(--text-secondary)',
-                    fontWeight: isActive ? '600' : '400',
+                    color: active ? 'var(--gold)' : 'var(--text-secondary)',
+                    fontWeight: active ? '600' : '400',
                     transition: 'color var(--transition-fast)',
                     position: 'relative',
-                    padding: '0.35rem 0'
+                    padding: '0.35rem 0',
+                    textDecoration: 'none',
+                    cursor: 'pointer'
                   }}
                   onMouseEnter={(e) => {
-                    if (!isActive) e.currentTarget.style.color = 'var(--text-primary)';
+                    if (!active) e.currentTarget.style.color = 'var(--text-primary)';
                   }}
                   onMouseLeave={(e) => {
-                    if (!isActive) e.currentTarget.style.color = 'var(--text-secondary)';
+                    if (!active) e.currentTarget.style.color = 'var(--text-secondary)';
                   }}
                 >
                   {link.label}
-                  {isActive && (
+                  {active && (
                     <span
                       style={{
                         position: 'absolute',
@@ -145,11 +255,11 @@ export function Navbar() {
                         height: '2px',
                         backgroundColor: 'var(--gold)',
                         borderRadius: '1px',
-                        boxShadow: '0 0 10px rgba(224, 162, 77, 0.6)'
+                        boxShadow: '0 0 10px rgba(224, 162, 77, 0.7)'
                       }}
                     />
                   )}
-                </Link>
+                </a>
               );
             })}
           </nav>
@@ -172,73 +282,65 @@ export function Navbar() {
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                padding: '0.45rem 0.95rem',
+                padding: '0.4rem 0.85rem',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-full)',
+                backgroundColor: 'rgba(255, 255, 255, 0.03)',
                 fontSize: 'var(--text-xs)',
-                letterSpacing: '0.05em',
                 color: 'var(--text-secondary)',
-                backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                transition: 'border-color var(--transition-fast)'
+                letterSpacing: 'var(--ls-wide)',
+                transition: 'all var(--transition-fast)'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--border-hover)')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = 'var(--border)')}
             >
               <Icon name="map-pin" size={13} style={{ color: 'var(--gold)' }} />
-              <span style={{ color: 'var(--text-primary)', fontWeight: '500' }}>
-                {currentLocation.name}
-              </span>
+              <span>{currentLocation.name}</span>
               {weather && (
                 <>
-                  <span style={{ opacity: 0.35 }}>·</span>
-                  <span style={{ color: 'var(--gold)' }}>
+                  <span style={{ color: 'var(--border)' }}>·</span>
+                  <span style={{ color: 'var(--gold)', fontWeight: '500' }}>
                     {weather.temp}°C
                   </span>
                 </>
               )}
             </button>
 
-            {/* Journey Panel Button */}
+            {/* Saved Dossier / Journey Counter */}
             <button
               onClick={toggleDrawer}
               className="btn-ghost"
-              aria-label={`Open Personal Journey with ${totalPlaces} places`}
+              aria-label={`Open Saved Journey Dossier. ${totalPlaces} items selected.`}
               style={{
-                position: 'relative',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '0.5rem',
-                padding: '0.45rem 1rem',
+                padding: '0.4rem 0.85rem',
                 border: '1px solid var(--border)',
                 borderRadius: 'var(--radius-full)',
+                backgroundColor: totalPlaces > 0 ? 'rgba(224, 162, 77, 0.1)' : 'rgba(255, 255, 255, 0.03)',
+                borderColor: totalPlaces > 0 ? 'var(--gold)' : 'var(--border)',
                 fontSize: 'var(--text-xs)',
+                color: totalPlaces > 0 ? 'var(--gold)' : 'var(--text-secondary)',
                 letterSpacing: 'var(--ls-wide)',
-                textTransform: 'uppercase',
-                color: totalPlaces > 0 ? 'var(--text-primary)' : 'var(--text-secondary)',
-                backgroundColor: totalPlaces > 0 ? 'rgba(224, 162, 77, 0.1)' : 'rgba(255, 255, 255, 0.02)',
-                borderColor: totalPlaces > 0 ? 'rgba(224, 162, 77, 0.4)' : 'var(--border)',
                 transition: 'all var(--transition-fast)'
               }}
-              onMouseEnter={(e) => (e.currentTarget.style.borderColor = 'var(--border-hover)')}
-              onMouseLeave={(e) => (e.currentTarget.style.borderColor = totalPlaces > 0 ? 'rgba(224, 162, 77, 0.4)' : 'var(--border)')}
             >
-              <Icon name="bookmark" size={14} style={{ color: totalPlaces > 0 ? 'var(--gold)' : 'inherit' }} />
-              <span style={{ fontWeight: '500' }}>Journey</span>
+              <Icon name="bookmark" size={13} style={{ color: totalPlaces > 0 ? 'var(--gold)' : 'inherit' }} />
+              <span style={{ textTransform: 'uppercase', fontWeight: totalPlaces > 0 ? '600' : '400' }}>
+                Journey
+              </span>
               {totalPlaces > 0 && (
                 <span
                   style={{
                     backgroundColor: 'var(--gold)',
-                    color: '#08090C',
-                    fontSize: '0.68rem',
-                    fontWeight: '700',
+                    color: 'var(--background)',
+                    borderRadius: 'var(--radius-full)',
                     width: '18px',
                     height: '18px',
-                    borderRadius: '50%',
-                    display: 'inline-flex',
+                    display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    marginLeft: '2px',
-                    boxShadow: '0 0 10px rgba(224, 162, 77, 0.5)'
+                    fontSize: '0.65rem',
+                    fontWeight: '700'
                   }}
                 >
                   {totalPlaces}
@@ -246,7 +348,7 @@ export function Navbar() {
               )}
             </button>
 
-            {/* Mobile Hamburger Toggle */}
+            {/* Mobile Hamburger Menu Toggle */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
               className="btn-icon nav-mobile-toggle"
@@ -263,7 +365,7 @@ export function Navbar() {
         </div>
       </header>
 
-      {/* Full-Screen Mobile Navigation Overlay (Clean & Transparent Logo) */}
+      {/* Full-Screen Mobile Navigation Overlay */}
       {isMobileMenuOpen && (
         <div
           className="mobile-menu-overlay"
@@ -278,10 +380,10 @@ export function Navbar() {
             flexDirection: 'column',
             justifyContent: 'space-between',
             padding: 'var(--space-2xl) var(--space-xl)',
-            animation: 'modal-fade-in 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+            animation: 'modal-fade-in 0.25s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
         >
-          {/* Top Bar with Clean Transparent Logo & Close Button */}
+          {/* Top Bar with Logo & Close Button */}
           <div
             style={{
               display: 'flex',
@@ -337,24 +439,23 @@ export function Navbar() {
             </button>
           </div>
 
-          {/* Nav Links Stack */}
-          
-            {/* Mobile Location Selector Strip */}
-            <div style={{ padding: 'var(--space-md) 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: 'var(--space-lg)' }}>
-              <button
-                onClick={() => { openLocationSelector(); setIsMobileMenuOpen(false); }}
-                className="btn btn-secondary btn-sm mobile-menu-location-chip"
-                style={{ width: '100%', justifyContent: 'space-between' }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <Icon name="map-pin" size={14} style={{ color: 'var(--gold)' }} />
-                  <span>{currentLocation.name}</span>
-                  {weather && <span style={{ color: 'var(--gold)' }}>· {weather.temp}°C</span>}
-                </div>
-                <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Change</span>
-              </button>
-            </div>
+          {/* Mobile Location Selector Strip */}
+          <div style={{ padding: 'var(--space-md) 0', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', marginBottom: 'var(--space-lg)' }}>
+            <button
+              onClick={() => { openLocationSelector(); setIsMobileMenuOpen(false); }}
+              className="btn btn-secondary btn-sm mobile-menu-location-chip"
+              style={{ width: '100%', justifyContent: 'space-between' }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Icon name="map-pin" size={14} style={{ color: 'var(--gold)' }} />
+                <span>{currentLocation.name}</span>
+                {weather && <span style={{ color: 'var(--gold)' }}>· {weather.temp}°C</span>}
+              </div>
+              <span style={{ fontSize: '0.7rem', textTransform: 'uppercase', color: 'var(--text-muted)' }}>Change</span>
+            </button>
+          </div>
 
+          {/* Mobile Nav Links Stack */}
           <nav
             style={{
               display: 'flex',
@@ -364,62 +465,80 @@ export function Navbar() {
               margin: 'auto 0'
             }}
           >
-            {navLinks.map((link) => {
-              const isActive = location.pathname === link.path;
+            {NAV_LINKS.map((link) => {
+              const active = isLinkActive(link);
               return (
-                <Link
-                  key={link.path}
-                  to={link.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                <a
+                  key={link.label}
+                  href={isHomePage ? `#${link.sectionId}` : link.path}
+                  onClick={(e) => handleNavClick(e, link)}
                   style={{
                     fontFamily: 'var(--font-display)',
                     fontSize: '2rem',
                     fontWeight: '300',
                     letterSpacing: '0.06em',
                     textTransform: 'uppercase',
-                    color: isActive ? 'var(--gold)' : 'var(--text-primary)',
+                    color: active ? 'var(--gold)' : 'var(--text-primary)',
                     textDecoration: 'none',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: '4px',
                     transition: 'color var(--transition-fast)'
                   }}
                 >
-                  {link.label}
-                </Link>
+                  <span>{link.label}</span>
+                  {active && (
+                    <span
+                      style={{
+                        width: '24px',
+                        height: '2px',
+                        backgroundColor: 'var(--gold)',
+                        borderRadius: '1px',
+                        boxShadow: '0 0 10px rgba(224, 162, 77, 0.8)'
+                      }}
+                    />
+                  )}
+                </a>
               );
             })}
           </nav>
 
-          {/* Bottom Actions */}
+          {/* Mobile Drawer Footer with Telemetry */}
           <div
             style={{
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
               gap: 'var(--space-md)',
-              width: '100%'
+              borderTop: '1px solid var(--border)',
+              paddingTop: 'var(--space-lg)'
             }}
           >
-            <button
-              onClick={() => {
-                setIsMobileMenuOpen(false);
-                openLocationSelector();
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                fontSize: 'var(--text-xs)',
+                color: 'var(--text-muted)'
               }}
-              className="btn btn-secondary btn-sm"
-              style={{ width: '100%', maxWidth: '280px' }}
             >
-              <Icon name="map-pin" size={14} style={{ color: 'var(--gold)' }} />
-              <span>Location: {currentLocation.name}</span>
-            </button>
+              <span>DEPARTURE TELEMETRY</span>
+              <span style={{ color: 'var(--gold)', fontFamily: 'var(--font-accent)' }}>
+                {currentLocation.lat.toFixed(2)}°N, {currentLocation.lng.toFixed(2)}°E
+              </span>
+            </div>
 
             <button
               onClick={() => {
                 setIsMobileMenuOpen(false);
                 toggleDrawer();
               }}
-              className="btn btn-primary btn-sm"
-              style={{ width: '100%', maxWidth: '280px' }}
+              className="btn btn-secondary"
+              style={{ width: '100%', justifyContent: 'center' }}
             >
               <Icon name="bookmark" size={14} />
-              <span>Personal Journey ({totalPlaces})</span>
+              <span>Open Saved Dossier ({totalPlaces})</span>
             </button>
           </div>
         </div>

@@ -40,6 +40,7 @@ export function EditorialImage({
         src={imageSrc}
         alt={alt}
         loading="lazy"
+        decoding="async"
         onLoad={() => setIsLoaded(true)}
         onError={handleError}
         style={{
