@@ -865,3 +865,98 @@
     display: none !important;
   }
 }
+
+
+/* =============================================================================
+   INDIA DESTINATIONS & AI COMPASS ENHANCEMENTS
+   ============================================================================= */
+
+/* India Destination Card Hover Effects */
+.india-dest-card {
+  transition: border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.india-dest-card:hover {
+  transform: translateY(-6px) !important;
+  border-color: rgba(224, 162, 77, 0.45) !important;
+  box-shadow: 0 20px 45px -10px rgba(0, 0, 0, 0.8), 0 0 25px rgba(224, 162, 77, 0.15) !important;
+}
+
+.india-dest-card:hover .india-card-media-wrap img {
+  transform: scale(1.08) !important;
+}
+
+.india-dest-card:hover .india-card-gradient {
+  opacity: 0.65 !important;
+}
+
+.india-dest-card:hover .india-card-header {
+  transform: translateY(-4px) !important;
+}
+
+.india-dest-card .india-card-arrow {
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.india-dest-card:hover .india-card-arrow {
+  transform: translateX(6px) !important;
+}
+
+/* AI Glowing Orb Animation */
+@keyframes ai-ring-rotate {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@keyframes ai-ring-rotate-reverse {
+  0% { transform: rotate(360deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@keyframes ai-orb-pulse {
+  0%, 100% {
+    transform: scale(1);
+    box-shadow: 0 0 16px rgba(245, 158, 11, 0.8), 0 0 30px rgba(245, 158, 11, 0.4);
+  }
+  50% {
+    transform: scale(1.12);
+    box-shadow: 0 0 24px rgba(245, 158, 11, 1), 0 0 45px rgba(245, 158, 11, 0.6);
+  }
+}
+
+/* Floating AI Guide Drawer Transitions */
+@keyframes drawer-slide-in {
+  from {
+    transform: translateX(100%);
+    opacity: 0.5;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Beyond Obvious Magazine Card */
+@media (max-width: 900px) {
+  .beyond-obvious-card {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Mobile AI Guide Responsiveness */
+@media (max-width: 600px) {
+  .floating-ai-drawer {
+    max-width: 100% !important;
+    border-left: none !important;
+  }
+  .floating-ai-guide-btn {
+    bottom: 20px !important;
+    right: 20px !important;
+    padding: 0.55rem 1rem !important;
+    font-size: 0.74rem !important;
+  }
+}

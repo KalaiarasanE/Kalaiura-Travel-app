@@ -3,7 +3,56 @@
    Curated destinations with rich cultural, climatic, and narrative depth
    ============================================================================== */
 
-export const DESTINATIONS = [
+
+import { INDIA_DESTINATIONS } from './indiaDestinations';
+
+const FORMATTED_INDIA_DESTINATIONS = INDIA_DESTINATIONS.map(d => ({
+  id: d.id,
+  name: d.name,
+  country: 'India',
+  region: 'Asia',
+  climate: d.climate || 'Tropical',
+  travelStyles: d.travelStyles || ['Culture', 'Nature'],
+  budget: d.budget || 'Premium',
+  bestSeason: d.bestTime?.includes('Oct') ? 'Winter' : 'Spring',
+  bestMonths: d.bestTime || 'October to March',
+  coordinates: { lat: 20.5937, lon: 78.9629 },
+  shortDescription: d.shortDescription,
+  heroImage: d.heroImage || d.cardImage,
+  cardImage: d.cardImage,
+  gridVariant: d.isFeatured ? 'card-featured' : 'standard',
+  editorialQuote: d.tagline || d.shortDescription,
+  defaultWeather: {
+    temp: d.weather?.temp || 26,
+    condition: d.weather?.condition || 'Pleasant',
+    feelsLike: d.weather?.temp || 26,
+    humidity: 55,
+    wind: 10,
+    visibility: '15 km',
+    sunrise: '06:05',
+    sunset: '18:25'
+  },
+  whyGo: [
+    { title: d.category, body: d.shortDescription },
+    { title: 'Cultural Antiquity', body: `Immerse in the living traditions, architectural marvels, and generational hospitality of ${d.state}.` },
+    { title: 'Sensory Immersion', body: `From regional spices to morning mists, ${d.name} offers profound unhurried depth.` }
+  ],
+  whenToGo: {
+    recommendation: d.bestTime,
+    seasons: [
+      { name: 'Autumn / Winter (Oct–Feb)', note: 'Crystalline skies, dry breezes, and ideal temperatures for exploration.' },
+      { name: 'Spring / Summer (Mar–Jun)', note: 'Vibrant local festivals, blossoming hill stations, and lush plantation greenery.' },
+      { name: 'Monsoon (Jul–Sep)', note: 'Dramatic rain canopies, swollen waterfalls, and rejuvenated rainforests.' }
+    ]
+  },
+  localNotes: [
+    { label: 'Cultural Etiquette', detail: 'Modest attire is appreciated at sacred temples and spiritual sanctuaries.' },
+    { label: 'Pacing Advice', detail: 'Allow generous travel time between hill stations to savor winding scenic routes.' },
+    { label: 'Local Flavors', detail: 'Savor regional organic spices and generational slow-cooked specialties.' }
+  ]
+}));
+
+const BASE_DESTINATIONS = [
   {
     id: 'kyoto',
     name: 'Kyoto',
@@ -442,6 +491,8 @@ export const DESTINATIONS = [
     ]
   }
 ];
+
+export const DESTINATIONS = [...FORMATTED_INDIA_DESTINATIONS, ...BASE_DESTINATIONS];
 
 export const REGIONS = ['All', 'Asia', 'Europe', 'Africa', 'Americas'];
 export const CLIMATES = ['All', 'Temperate', 'Mediterranean', 'Arctic/Alpine', 'Tropical', 'Arid'];

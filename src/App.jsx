@@ -1,5 +1,5 @@
 /* ==============================================================================
-   AERORA — ROOT APPLICATION COMPONENT
+   KALAIURA — ROOT APPLICATION COMPONENT
    ============================================================================== */
 
 import React, { useEffect } from 'react';
@@ -17,6 +17,7 @@ import { Navbar } from './components/Navbar';
 import { Footer } from './components/Footer';
 import { LocationSelector } from './components/LocationSelector';
 import { JourneyPanel } from './components/JourneyPanel';
+import { FloatingAIGuide } from './components/FloatingAIGuide';
 
 import { Home } from './pages/Home';
 import { Destinations } from './pages/Destinations';
@@ -27,11 +28,13 @@ import { GuidePage } from './pages/GuidePage';
 
 // ScrollToTop resets scroll position on route transitions
 function ScrollToTop() {
-  const { pathname } = useLocation();
+  const { pathname, hash } = useLocation();
 
   useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
+    if (!hash) {
+      window.scrollTo(0, 0);
+    }
+  }, [pathname, hash]);
 
   return null;
 }
@@ -65,9 +68,10 @@ export default function App() {
               </Routes>
             </div>
 
-            {/* Global Modals & Drawers */}
+            {/* Global Modals, Floating AI Guide & Drawers */}
             <LocationSelector />
             <JourneyPanel />
+            <FloatingAIGuide />
             <Footer />
           </div>
         </JourneyProvider>

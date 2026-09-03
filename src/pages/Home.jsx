@@ -1,98 +1,87 @@
 /* ==============================================================================
-   KALAIURA — FLAGSHIP HOME PAGE (MOTIONSITES AI ANIMATION INTEGRATION)
+   KALAIURA — FLAGSHIP HOME PAGE (INDIA DISCOVERY & AI INTELLIGENCE)
    Near-black atmosphere, champagne gold accents, editorial bento,
-   interactive 3D card tilt, ambient mouse spotlight & smooth scroll reveals.
-   Isolated exclusively to Home page.
+   India destination showcase, interactive AI Travel Compass, and progressive scroll reveals.
    ============================================================================== */
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import '../styles/homeMotion.css';
 import { useHomeMotion } from '../hooks/useHomeMotion';
 import { HomeCursor } from '../components/HomeCursor';
 import { Hero } from '../components/Hero';
 import { StatsTicker } from '../components/StatsTicker';
-import { DestinationExplorer } from '../components/DestinationExplorer';
-import { BentoShowcase } from '../components/BentoShowcase';
-import { JourneyMap } from '../components/JourneyMap';
-import { FamousPlaces } from '../components/FamousPlaces';
-import { AIGuide } from '../components/AIGuide';
-import { TravelerPerspectives } from '../components/TravelerPerspectives';
-import { EditorialCTA } from '../components/EditorialCTA';
-import { PLACES } from '../data/places';
+import { IndiaExplorer } from '../components/IndiaExplorer';
+import { IndiaBeyondObvious } from '../components/IndiaBeyondObvious';
+import { AITravelCompass } from '../components/AITravelCompass';
+import { TrendingDestinations } from '../components/TrendingDestinations';
+import { BuildJourneyCTA } from '../components/BuildJourneyCTA';
+import { TravelStories } from '../components/TravelStories';
+import { FinalCTA } from '../components/FinalCTA';
 
 export function Home() {
   const homeRef = useHomeMotion();
 
-  const scrollToExplorer = () => {
-    const explorerEl = document.getElementById('destinations-explorer');
-    if (explorerEl) {
-      explorerEl.scrollIntoView({ behavior: 'smooth' });
+  // Strict: Always start at top of homepage on load or reload
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0);
+    }
+  }, []);
+
+  const scrollToIndiaExplorer = () => {
+    const el = document.getElementById('explore-india');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
-  // Curated landmark preview across destinations
-  const featuredPlaces = PLACES.slice(0, 6);
-
   return (
     <main ref={homeRef} className="home-page">
-      {/* Dynamic Ambient Mouse-Follower Spotlight (Desktop Fine Pointer Only) */}
+      {/* Ambient Mouse-Follower Spotlight (Desktop Fine Pointer Only) */}
       <div className="home-ambient-spotlight" aria-hidden="true" />
 
-      {/* Subtle Luxury Interactive Pointer Aura (Desktop Fine Pointer Only) */}
+      {/* Luxury Interactive Cursor Follower (Desktop Fine Pointer Only) */}
       <HomeCursor />
 
-      {/* 1. Full-Screen Cinematic Video Hero with 3D Parallax & Staggered Entrance */}
-      <Hero onExploreClick={scrollToExplorer} />
+      {/* 01 — HERO: GO WHERE YOUR CURIOSITY LEADS */}
+      <Hero onExploreClick={scrollToIndiaExplorer} />
 
-      {/* 2. Sleek Telemetry & Stats Ticker Strip with Infinite Ribbon Motion */}
+      {/* Seamless Telemetry & Atmospheric Stats Ribbon */}
       <StatsTicker />
 
-      {/* 3. Asymmetric Destination Explorer with Motionsites Capsule Filter Bar */}
-      <div style={{ paddingTop: 'var(--space-4xl)' }} data-home-reveal>
-        <DestinationExplorer id="destinations-explorer" isHome={true} />
-      </div>
-
-      {/* 4. Intelligence Bento Grid Showcase with Specular Hover Glow */}
+      {/* 02 — EXPLORE INDIA: Featured Indian Destinations & States */}
       <div data-home-reveal>
-        <BentoShowcase />
+        <IndiaExplorer />
       </div>
 
-      {/* 5. Stylized Transcontinental Journey Route Map with Animated Trajectory */}
+      {/* 03 — INDIA, BEYOND THE OBVIOUS: Hidden & Rare Sanctuaries */}
       <div data-home-reveal>
-        <JourneyMap />
+        <IndiaBeyondObvious />
       </div>
 
-      {/* 6. Curated Landmark Monuments Showcase */}
-      <div className="container" style={{ paddingBottom: 'var(--space-4xl)' }} data-home-reveal>
-        <FamousPlaces
-          places={featuredPlaces}
-          title="Monuments of Architectural Gravity"
-        />
-      </div>
-
-      {/* 7. Conversational AI Guide Section */}
-      <section className="container" style={{ paddingBottom: 'var(--space-4xl)' }} data-home-reveal>
-        <div className="section-header centered">
-          <span className="eyebrow">Intelligent Consultation</span>
-          <h2 className="section-title">KALAIURA Guide</h2>
-          <p className="section-subtitle">
-            Engage with our cultural concierge. Inquire about seasonal light, local etiquette, or tailored pacing before setting out.
-          </p>
-        </div>
-
-        <div style={{ maxWidth: '820px', margin: '0 auto' }}>
-          <AIGuide initialDestinationId="kyoto" />
-        </div>
-      </section>
-
-      {/* 8. Traveler Perspectives & Memoirs */}
+      {/* 04 — AI TRAVEL GUIDE: "YOUR JOURNEY, INTELLIGENTLY CURATED." */}
       <div data-home-reveal>
-        <TravelerPerspectives />
+        <AITravelCompass />
       </div>
 
-      {/* 9. Editorial Pre-Footer Call to Action with Glowing Core */}
+      {/* 05 — TRENDING DESTINATIONS: Seasonal High-Interest Sanctuaries */}
       <div data-home-reveal>
-        <EditorialCTA />
+        <TrendingDestinations />
+      </div>
+
+      {/* 06 — BUILD YOUR JOURNEY: Trip Planner Architecture CTA */}
+      <div data-home-reveal>
+        <BuildJourneyCTA />
+      </div>
+
+      {/* 07 — TRAVEL STORIES / INSPIRATION: Memoirs & Cultural Dispatches */}
+      <div data-home-reveal>
+        <TravelStories />
+      </div>
+
+      {/* 08 — FINAL CTA: "WHERE WILL YOUR CURIOSITY TAKE YOU NEXT?" */}
+      <div data-home-reveal>
+        <FinalCTA />
       </div>
     </main>
   );

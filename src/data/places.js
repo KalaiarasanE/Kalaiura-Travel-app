@@ -4,6 +4,73 @@
    ============================================================================== */
 
 export const PLACES = [
+  // --- INDIA LANDMARKS ---
+  {
+    id: 'alleppey-houseboats',
+    destinationId: 'kerala',
+    destinationName: 'Kerala',
+    name: 'Alleppey Backwater Canals',
+    category: 'Water Sanctuary',
+    image: 'https://images.unsplash.com/photo-1602216056096-3b40cc0c9944?q=80&w=1200&auto=format&fit=crop',
+    description: 'Drifting on a teakwood kettuvallam through emerald lotus lagoons, flanked by towering coconut palms and quiet fishing villages.',
+    recommendedDuration: 'Overnight / 2 Days',
+    bestTime: 'Sunset & Early Dawn',
+    location: 'Alappuzha, Kerala',
+    highlights: ['Vembanad Lake', 'Vennattukad Village', 'Kumarakom Bird Sanctuary']
+  },
+  {
+    id: 'amber-fort',
+    destinationId: 'rajasthan',
+    destinationName: 'Rajasthan',
+    name: 'Amber Palace & Fort',
+    category: 'Royal Rajput Citadel',
+    image: 'https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=1200&auto=format&fit=crop',
+    description: 'Golden yellow sandstone ramparts reflected in Maota Lake, adorned with mirror-mosaic Sheesh Mahal courtyards.',
+    recommendedDuration: '3 Hours',
+    bestTime: 'Early Morning (08:00)',
+    location: 'Amer, Jaipur, Rajasthan',
+    highlights: ['Sheesh Mahal Mirror Hall', 'Ganesh Pol Gate', 'Maota Lake Reflection']
+  },
+  {
+    id: 'dal-lake-shikaras',
+    destinationId: 'kashmir',
+    destinationName: 'Kashmir',
+    name: 'Dal Lake & Floating Gardens',
+    category: 'Alpine Lake Sanctuary',
+    image: 'https://images.unsplash.com/photo-1595815771614-ade9d652a65d?q=80&w=1200&auto=format&fit=crop',
+    description: 'Hand-carved wooden Shikaras gliding past floating lotus blooms and century-old cedar houseboats beneath snowy Himalayan crests.',
+    recommendedDuration: '2.5 Hours',
+    bestTime: 'Sunrise (06:00)',
+    location: 'Srinagar, Jammu & Kashmir',
+    highlights: ['Floating Flower Market', 'Char Chinar Island', 'Nigeen Lake Channel']
+  },
+  {
+    id: 'hampi-stone-chariot',
+    destinationId: 'karnataka',
+    destinationName: 'Karnataka',
+    name: 'Vittala Stone Chariot',
+    category: 'Imperial Dravidian Architecture',
+    image: 'https://images.unsplash.com/photo-1600100397608-f010f443b74d?q=80&w=1200&auto=format&fit=crop',
+    description: 'A monolithic 15th-century shrine sculpted from solid granite boulders representing the mythical carriage of Garuda.',
+    recommendedDuration: '2 Hours',
+    bestTime: 'Golden Hour (16:30 – 18:00)',
+    location: 'Hampi, Karnataka',
+    highlights: ['Stone Chariot', 'Musical Pillars Hall', 'Tungabhadra River Bank']
+  },
+  {
+    id: 'double-decker-bridge',
+    destinationId: 'meghalaya',
+    destinationName: 'Meghalaya',
+    name: 'Double Decker Living Root Bridge',
+    category: 'Bio-Engineering Wonder',
+    image: 'https://images.unsplash.com/photo-1596401057633-54a8fe8ef647?q=80&w=1200&auto=format&fit=crop',
+    description: 'Generations of Khasi tribesmen guiding rubber tree roots across deep rainforest gorges to create living two-tier pedestrian bridges.',
+    recommendedDuration: 'Full Day Trek',
+    bestTime: 'October to April',
+    location: 'Nongriat, Cherrapunji, Meghalaya',
+    highlights: ['Two-Tier Root Arcs', 'Turquoise River Pools', 'Nongriat Rainforest']
+  },
+
   // --- KYOTO ---
   {
     id: 'fushimi-inari',
